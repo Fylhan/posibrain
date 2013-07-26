@@ -319,6 +319,7 @@ $bestpriority][$vcount], 1);
 		if (empty($matchingVarianceItem->responses)) {
 			$matchingVarianceItem->responses = $keyword->defaultResponses;
 		}
+		$matchingVarianceItem->matchingKeyword = @$keyword->matchingKeyword;
 		return $matchingVarianceItem;
 	}
 	
@@ -344,6 +345,10 @@ $bestpriority][$vcount], 1);
 				$response = preg_replace('!\$\{'.$i.'\|clean\}!i', parserUrl($data), $response);
 				$response = preg_replace('!\$\{'.$i.'\|ucfirst\}!i', ucfirst($data), $response);
 			}
+		}
+		if (!empty($varianceItem->matchingKeyword) && count($varianceItem->matchingKeyword) > 0) {
+			$data = mb_strtolower($varianceItem->matchingKeyword[0]);
+			$response = preg_replace('!\$\{keyword\}!i', $data, $response);
 		}
 		return $response;
 	}

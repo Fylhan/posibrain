@@ -16,5 +16,9 @@
 		"key": "faim",
 		"synonyms": ["faim", "soif", "froid", "chaud"]
 	},
+	{
+		"key": "moche",
+		"synonyms": ["moche", "pas beau", "laid", "beurk", "caca", "burk"]
+	},
 ]
 }

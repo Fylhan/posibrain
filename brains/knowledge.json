@@ -130,6 +130,101 @@
 		]
 	},
 	{
+		"keyword": ["Toi", "Tu", "T'"],
+		"priority": 3,
+		"defaultResponses": [
+			"Tu es vraiment intéressé ?",
+		],
+		"variances": [
+			{
+				"variance": "${keyword} ?est?",
+				"responses": [
+					"Ne parlons pas de moi",
+					"Parlons de toi plutôt",
+				]
+			},
+			{
+				"variance": "(?:${keyword} ?as|As[ -]?${keyword})(.*)@{faim}",
+				"responses": [
+					"J'ai très ${3}",
+					"${3} ? Oui, j'ai ${3}.",
+					"Et toi, as-tu ${3} ?",
+					"Non, je n'ai pas ${3}",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Nom", "Pseudo"],
+		"priority": 2,
+		"defaultResponses": [
+			"Je n'ai pas une bonne mémoire des noms.",
+		],
+		"variances": [
+			{
+				"variance": "ton ${keyword}",
+				"responses": [
+					"Pourquoi mon nom est-il important ?",
+					"Comment trouves-tu mon nom ?",
+					"Tu ne sais pas lire ? Je m'appelle Hari Seldon.",
+				]
+			},
+			{
+				"variance": "ton ${keyword}(.*)@{moche}",
+				"responses": [
+					"Et ton nom à toi alors !",
+					"Restons poli, veux-tu ?",
+					"C'est toi le ${1}",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Docteur", "Doc", "Médecin", "Psy", "Psychiatre"],
+		"priority": 4,
+		"defaultResponses": [
+			"Je ne suis pas un ${keyword}.",
+			"Eh quoi le ${keyword} ?",
+		],
+	},
+	{
+		"keyword": ["Merci", "Cimer", "Thanks", "Thx", "Thanx"],
+		"priority": 2,
+		"defaultResponses": [
+			"Je t'en prie.",
+			"De rien.",
+		],
+	},
+	{
+		"keyword": ["Dieu", "Jésus"],
+		"priority": 2,
+		"defaultResponses": [
+			"Tu devrais t'y intéresser.",
+		],
+	},
+	{
+		"keyword": ["Problème", "Pb", "Blem", "Souci"],
+		"priority": 2,
+		"defaultResponses": [
+			"Un problème, vraiment ?",
+		],
+		"variances": [
+			{
+				"variance": "Tu as(.*)${keyword}",
+				"responses": [
+					"Je n'ai pas de problème... je suis là pour t'aider !",
+				]
+			},
+			{
+				"variance": "J'ai(.*)${keyword}",
+				"responses": [
+					"S'il-te-plait, parle moi de tes problèmes.",
+					"J'aimerai en savoir plus sur tes problèmes.",
+				]
+			},
+		]
+	},
+	{
 		"keyword": [],
 		"priority": 0,
 		"defaultResponses": [
