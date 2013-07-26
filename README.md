@@ -15,7 +15,7 @@ How to test?
 -----------
 Launch the file [test.php](https://github.com/Fylhan/tchatbot/blob/master/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
 
-![Tchatbot discussion example](https://github.com/Fylhan/tchatbot/blob/master/doc/tchatbot-example.png)
+![Tchatbot discussion example](https://raw.github.com/Fylhan/tchatbot/master/doc/tchatbot-example.png)
 
 An interactive tchat implementation will come. At the moment, this tchatbot is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speack with him in french by beginning your sentances by "@Hari".
 
