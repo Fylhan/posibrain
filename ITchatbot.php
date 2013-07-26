@@ -6,7 +6,7 @@
  */
 interface ITchatBot
 {
-	public function isEnabled($string);
+	public function isTriggered($string);
 
 	public function loadKnowledge();
 

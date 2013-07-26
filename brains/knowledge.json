@@ -63,7 +63,7 @@
 				"variance": "${keyword} (.*)",
 				"responses": [
 					"Tu m'as eu !",
-					"Demande à [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien]"
+					"Demande à <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a>"
 				]
 			},
 			{
@@ -77,15 +77,15 @@
 			{
 				"variance": "${keyword} est[ -]?ce (.*)",
 				"responses": [
-					"Connais-tu [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien] ?",
-					"[lien=https://duckduckgo.com/?q=${1}]DuckDuckGo est ton ami[/lien]"
+					"Connais-tu <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a> ?",
+					"<a href=\"https://duckduckgo.com/?q=${1}]DuckDuckGo est ton ami</a>"
 				]
 			},
 			{
 				"variance": "${keyword} est (.*)",
 				"responses": [
-					"Je ne sais pas moi ! [lien=https://duckduckgo.com/?q=${1|clean}]DuckDuckGo est ton ami[/lien] !",
-					"Demande à [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien]"
+					"Je ne sais pas moi ! <a href=\"https://duckduckgo.com/?q=${1|clean}\">DuckDuckGo est ton ami</a> !",
+					"Demande à <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a>"
 				]
 			},
 		]
@@ -100,8 +100,8 @@
 			{
 				"variance": "${keyword} est (.*)",
 				"responses": [
-					"Connais-tu [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien] ?",
-					"[lien=https://duckduckgo.com/?q=${1|clean}]DuckDuckGo est ton ami[/lien]"
+					"Connais-tu <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a> ?",
+					"<a href=\"https://duckduckgo.com/?q=${1|clean}\">DuckDuckGo est ton ami</a>"
 				]
 			},
 		]

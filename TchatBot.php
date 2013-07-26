@@ -35,7 +35,7 @@ class TchatBot implements ITchatBot
 	}
 
 
-	public function isEnabled($content) {
+	public function isTriggered($content) {
 		return (NULL != $content && startsWith('@Hari', $content));
 	}
 
@@ -368,7 +368,7 @@ $bestpriority][$vcount], 1);
 		$response = $this->getResponse($varianceItem);
 		
 		echo 'Me: '.$message.'<br />';
-		echo 'ResponseV0: '.$this->generateAnswerV0($author, $message, $date).'<br />';
+		// echo 'ResponseV0: '.$this->generateAnswerV0($author, $message, $date).'<br />';
 		echo 'Response: ';
 		return $response;
 	}
