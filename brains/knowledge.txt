@@ -1,0 +1,260 @@
+syn: Bonjour Hello Hi Hey Salut Hola Yo Hiya Lu Jour Wesh Ouesh
+syn: Ami Camarade Mec Pote Amie Copain Copine
+syn: toi tu
+syn: faim soif chaud froid
+
+key: Bonjour
+pri: 3
+var: Bonjour
+   resp: Bonjour, comment vas-tu ?
+   resp: Tu vas bien ?
+   resp: Yo Yo Yo
+   resp: Salut !
+   resp: Yo, ça roule ?
+var: Bonjour @{ami} .* @{faim}
+   resp: Salut, moi aussi.
+var: Bonjour @{ami}
+   resp: Salut :-)
+
+key: Hello
+pri: 2
+goto: Bonjour
+
+key: Salut
+pri: 2
+goto: Bonjour
+
+key: Hey
+pri: 2
+goto: Bonjour
+
+key: Hola
+pri: 2
+goto: Bonjour
+
+key: Hi
+pri: 2
+goto: Bonjour
+
+key: Aurevoir
+pri: 2
+var: Aurevoir
+   resp: A bientôt !
+   resp: Bonne journée, monseigneur.
+   resp: A plus mec
+var: Aurevoir @{ami}
+   resp: Ciao
+
+key: Comment
+pri: 3
+var: Comment (.*)
+   resp: Tu m'as eu !
+   resp: Demande à [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien]
+var: Comment vas-?tu
+   resp: Je ne sais pas trop...
+   resp: ça roule !
+   resp: Je vais bien, merci de demander.
+var: Comment est-?ce (.*)
+   resp: Connais-tu [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien] ?
+   resp: [lien=https://duckduckgo.com/?q=${1}]DuckDuckGo est ton ami[/lien]
+var: Comment est (.*)
+   resp: Je ne sais pas moi ! [lien=https://duckduckgo.com/?q=${1|clean}]DuckDuckGo est ton ami[/lien] !
+   resp: Demande à [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien]
+
+key: Qui
+pri: 4
+var: Qui est (.*)
+   resp: Connais-tu [lien=http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}]Wikipédia[/lien] ?
+   resp: [lien=https://duckduckgo.com/?q=${1|clean}]DuckDuckGo est ton ami[/lien]
+   
+key: Toi
+pri: 2
+var: Toi
+   resp: Tu es vraiment intéressé ?
+var: Tu es
+   resp: Ne parlons pas de moi
+
+key: Nom
+pri: 4
+var: Nom
+   resp: Je n'ai pas une bonne mémoire des noms.
+var: ton nom
+   resp: Pourquoi mon nom est-il important ?
+   resp: Comment trouves-tu mon nom ?
+
+key: Quelle
+pri: 4
+var: Quelle heure est-?il
+   resp: Il est ${time}
+   resp: ${time}, si je ne m'abuse.
+   resp: Laisse-moi regarder... ${time} !
+var: A(?:aurai)s?-?tu l'heure
+   resp: Il est ${time}
+   resp: ${time}, si je ne m'abuse.
+   resp: Laisse-moi regarder... ${time} !
+   
+key: Heure
+pri: 4
+var: L?'?heure
+   resp: Il est ${time}. Tu n'as qu'à demander !
+
+key: Oui
+pri: 2
+var: oui
+   resp: Ok, cool!
+   resp: ça me va
+   resp: Ok.
+
+key: Non
+pri: 3
+var: non
+   resp: Ah, ok.
+   resp: Si tu le dis.
+   resp: Pourquoi pas ?
+   resp: Vraiment ?
+
+key: Ok
+pri: 3
+var: ok
+   resp: Si tu le dis.
+   resp: Comment tu veux !
+   resp: Voilà qui me convient.
+
+key: As-tu
+pri: 4
+var: As-?tu
+   resp: Qu'est-ce j'ai ?
+var: As-?tu .* ?@{faim}
+   resp: J'ai très ${1}
+   resp: Non, je n'ai pas ${1}
+var: Tu as
+   resp: Je ne suis pas sûr d'avoir quelque chose. Et toi ?
+var: Tu as .* ?@{faim}
+   resp: ${1} ? Oui, j'ai ${1}.
+   resp: Et toi, as-tu ${1} ?
+
+key: Docteur
+pri: 4
+var: docteur
+   resp: Je ne suis pas un docteur.
+   resp: Eh quoi le docteur ?
+
+key: Merci
+pri: 3
+var: merci
+   resp: Je t'en prie.
+   resp: De rien.
+
+key: Pourquoi
+pri: 3
+var: pourquoi
+   resp: Je ne suis pas sûr.
+   resp: A vrai dire, je ne sais pas trop.
+var: tu sais pourquoi
+   resp: Non, je ne sais pas POURQUOI !
+
+key: Peut-être
+pri: 3
+var: peut-être
+   resp: Ok.
+   resp: C'est toi qui le dis !
+   
+key: Où
+pri: 4
+var: où
+   resp: Je ne peux vraiment pas dire.
+var: Tu vis où
+   resp: Pourquoi veux-tu savoir où je vis ?
+var: Tu viens d'où
+   resp: Pourquoi veux-tu savoir d'où je viens ?
+
+key: Quoi
+pri: 3
+var: Quoi
+   resp: QUOI!!!
+
+key: dieu
+pri: 3
+var: dieu
+   resp: Tu devrais t'y intéresser.
+
+key: Aime
+pri: 3
+var: aime
+   resp: Je ne suis pas sûr.
+var: aimes-tu
+   resp: Je ne sais pas si j'aime ça.
+   resp: Crois-tu que j'aime cela ?
+   
+key: Problème
+pri: 5
+var: tu as
+   resp: Je n'ai pas de problème... je suis là pour t'aider !
+var: J'ai
+   resp: S'il-te-plait, parle moi de tes problèmes.
+   resp: J'aimerai en savoir plus sur tes problèmes.
+
+key: Je
+pri: 2
+var: Je
+   resp: Ah c'est vrai ?
+   resp: Je vois.
+var: Je suis
+   resp: Tu l'es vraiment ?
+   resp: Intéressant.
+   
+key: Aight
+pri 2:
+goto: Ok
+
+key: A bientôt
+pri: 2
+goto: Aurevoir
+
+key: ça va
+pri: 2
+goto: Comment
+
+key: ça roule
+pri: 2
+goto: Comment
+
+key: Tu vas bien
+pri: 2
+goto: Comment
+
+key: Comment vas-tu
+pri: 2
+goto: Comment
+
+key: Cimer
+pri: 2
+goto: Merci
+
+key: Probablement
+pri: 3
+goto: Peut-être
+
+key: yep
+pri: 3
+goto: oui
+
+key: yeah
+pri: 3
+goto: Oui
+
+key: nope
+pri: 3
+goto: Non
+
+key: god
+pri: 3
+goto: dieu
+   
+key: tu aimes
+pri: 3
+goto: Aime
+
+key: Parce que
+pri: 3
+goto: Ok
