@@ -4,6 +4,8 @@ TchatBot
 A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?
 Nothing very intelligent at the moment, a set of predefined sentances lead to an other set of predefined answers. But still, synonyms can be defined, data from the sentance can be used in the answer, and of course the same answer won't be use everytime.
 
+Based on this [Eliza PHP tchatbot implementation](http://www.perkiset.org/forum/all_things_general_tech/artificial_intelligence_as_we_know_it_today-t1177.5.html;wap2=), at least for the concept.
+
 Installation
 ------------
 Just download, copy and past. No configuration is required because it is just an algorithm.
@@ -11,9 +13,8 @@ Just download, copy and past. No configuration is required because it is just an
 
 How to test?
 -----------
-
 Launch the file [test.php](https://github.com/Fylhan/tchatbot/blob/master/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
-
+An itneractive tchat implementation will come.
 
 How to use and modify?
 -----------
@@ -31,6 +32,7 @@ A lot of things are in progress!
 * Increase knowledge syntax possibilities
 * Manage several charset, not only UTF-8
 * Add more and more intelligence !
+* Créer un exemple avec un tchat interactif
 
 
 Licencing
