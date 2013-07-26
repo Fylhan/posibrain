@@ -14,7 +14,8 @@ Just download, copy and past. No configuration is required because it is just an
 How to test?
 -----------
 Launch the file [test.php](https://github.com/Fylhan/tchatbot/blob/master/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
-An itneractive tchat implementation will come.
+![Tchatbot discussion example](http://la-bnbox.info/document/stockage/tchatbot-example.png "Tchatbot discussion example")
+An itneractive tchat implementation will come. At the moment, this tchatbot is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speack with him in french by beginning your sentances by "@Hari".
 
 How to use and modify?
 -----------
@@ -26,13 +27,14 @@ Work in progress
 A lot of things are in progress!
 * Update the first brain's knowledge
 * Provide a way to select between several brains
+* Manage several langage
 * Add discussion log that will be used by the bot to learn and be a little bit more inteligent
 * Add Composer
 * Add documentation
 * Increase knowledge syntax possibilities
 * Manage several charset, not only UTF-8
 * Add more and more intelligence !
-* Créer un exemple avec un tchat interactif
+* Create an interactive tchat example
 
 
 Licencing
