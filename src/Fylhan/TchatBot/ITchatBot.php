@@ -1,5 +1,7 @@
 <?php
 
+namespace Fylhan\TchatBot;
+
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-07-11

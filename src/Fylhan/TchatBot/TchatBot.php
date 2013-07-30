@@ -1,6 +1,16 @@
 <?php
+
+namespace Fylhan\TchatBot;
+
+use Seld\JsonLint\JsonParser;
+use Seld\JsonLint\ParsingException;
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+
 include('tools.php');
-include_once('ITchatBot.php');
+
 
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
@@ -8,6 +18,7 @@ include_once('ITchatBot.php');
  */
 class TchatBot implements ITchatBot
 {
+	private static $logger = NULL;
 	private $name;
 	private $conceptorName;
 	private $lang;
@@ -18,11 +29,20 @@ class TchatBot implements ITchatBot
 
 
 	public function __construct($params=array()) {
+		if (NULL == self::$logger) {
+			self::$logger = new Logger('TchatBot');
+			if (!is_dir(__DIR__.'/../../../logs/')) {
+				mkdir(__DIR__.'/../../../logs/');
+				chmod(__DIR__.'/../../../logs/', '755');
+			}
+			self::$logger->pushHandler(new StreamHandler(__DIR__.'/../../../logs/log.log', Logger::DEBUG));
+		}
+
 		$this->name = isset($params['name']) ? $params['name'] : 'Hari S.';
 		$this->conceptorName = isset($params['conceptorName']) ? $params['conceptorName'] : 'Fylhan';
 		$this->lang = isset($params['lang']) ? $params['lang'] : 'fr-fr';
 		$this->knowledgeFile = isset($params['knowledgeFile']) ? $params['knowledgeFile'] : 'knowledge.txt';
-		$this->brainsFolder = isset($params['brainsFolder']) ? $params['brainsFolder'].(!endsWith('/', $params['brainsFolder']) ? '/' : '') : 'brains/';
+		$this->brainsFolder = isset($params['brainsFolder']) ? $params['brainsFolder'].(!endsWith('/', $params['brainsFolder']) ? '/' : '') : __DIR__.'/brains/';
 		$this->charset = isset($params['charset']) ? $params['charset'] : 'UTF-8';
 		
 		// Init seed for random values
@@ -40,8 +60,12 @@ class TchatBot implements ITchatBot
 	}
 
 	public function loadKnowledge() {
+		self::$logger->addDebug(__FUNCTION__);
 		if (!is_file($this->brainsFolder.'knowledge.php')) {
-			$this->generateKnowledgeCache();
+			if (!$this->generateKnowledgeCache()) {
+				self::$logger->addWarning('Can\'t load knowledge');
+				return NULL;
+			}
 		}
 		// include($this->brainsFolder.'knowledge.php');
 		return preg_split('!\n!', file_get_contents($this->brainsFolder.$this->getKnowledgeFile()));
@@ -54,8 +78,12 @@ class TchatBot implements ITchatBot
 		$data = cleanJsonString($data);
 
 		// Parse JSON
-		if (NULL == ($knowledge = json_decode($data))) {
-			echo getJsonLastError();
+		try {
+			$parser = new JsonParser();
+			$knowledge = $parser->parse($data, JsonParser::ALLOW_DUPLICATE_KEYS);
+		}
+		catch(ParsingException $e) {
+			self::$logger->addWarning('Can\'t load JSON file "'.$filepath.'": '.$e->getMessage());
 			return NULL;
 		}
 		return $knowledge;
@@ -65,6 +93,10 @@ class TchatBot implements ITchatBot
 		$synonyms = $this->loadJsonFile($this->brainsFolder.'synonyms.json');
 		$this->knowledge = $this->loadJsonFile($this->brainsFolder.'knowledge.json');
 
+		if (NULL == $synonyms || NULL == $this->knowledge) {
+			return false;
+		}
+		
 		// Pre-compute synonyms
 		foreach($this->knowledge->keywords AS $k => $keyword) {
 			if (!empty($keyword->variances)) {
@@ -88,7 +120,6 @@ getSynonyms(
 		}
 		$this->knowledges->synonyms = $synonyms;
 		file_put_contents($this->brainsFolder.'knowledge_computed.json', json_encode($this->knowledges));
-		// echa($knowledge);
 		return true;
 	}
 	
@@ -99,6 +130,116 @@ getSynonyms(
 			}
 		}
 	}
+	
+	public function findBestPriorityKeyword($message) {
+		$bestPriority = -2;
+		$matchingKeywordItem = '';
+		// Loop over keywords
+		foreach($this->knowledges->keywords AS $keywordItem) {
+			// Better priority and matching keyword (or it is the default one)
+			if ($keywordItem->priority > $bestPriority
+				&& (empty($keywordItem->keyword)
+					|| preg_match('!(?:^|\s|[_-])('.implode('|', $keywordItem->keyword).')(?:$|\s|[\'_-])!i', $message, $matching))) {
+				$bestPriority = $keywordItem->priority;
+				$matchingKeywordItem = $keywordItem;
+				if (!empty($matching)) {
+					array_shift($matching);
+					$matchingKeywordItem->matchingKeyword = $matching;
+				}
+			}
+		}
+		return $matchingKeywordItem;
+	}
+	
+	public function findBestVariance($message, $keyword) {
+		// Verify
+		if (empty($keyword)) {
+			logger('Error: hum, this keyword item is kind of empty', __LINE__);
+			return;
+		}
+		
+		$bestPriority = -2;
+		$matchingVarianceItem;
+		// Search best variance
+		if (!empty($keyword->variances)) {
+			foreach($keyword->variances AS $varianceItem) {
+				$varianceSize = strlen($varianceItem->variance);
+				if ($varianceSize > $bestPriority 
+						&& preg_match_all('!'.$varianceItem->varianceRegexable.'!is', $message, $matching)) {
+					$bestPriority = $varianceSize;
+					$matchingVarianceItem = $varianceItem;
+					if (!empty($matching)) {
+						array_shift($matching);
+						$matchingVarianceItem->matchingData = $matching;
+					}
+				}
+			}
+		}
+		// No variance found? Use default responses
+		if (empty($matchingVarianceItem->responses)) {
+			$matchingVarianceItem->responses = $keyword->defaultResponses;
+		}
+		$matchingVarianceItem->matchingKeyword = @$keyword->matchingKeyword;
+		return $matchingVarianceItem;
+	}
+	
+	public function getResponse($varianceItem) {
+		// Verify
+		if (empty($varianceItem->responses)) {
+			return 'Ouch !';
+		}
+		
+		// Select random response
+		$index = mt_rand(0, count($varianceItem->responses)-1);
+		$response = $varianceItem->responses[$index];
+		
+		// Post traitment
+		if (strstr($response, '${time}')) {
+			$nowDate = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
+			$response = preg_replace('!\$\{time\}!i', $nowDate->format('H\hi'), $response);
+		}
+		if (!empty($varianceItem->matchingData) && count($varianceItem->matchingData) > 0) {
+			foreach($varianceItem->matchingData AS $i => $data) {
+				$data = mb_strtolower($data[0]);
+				$response = preg_replace('!\$\{'.$i.'\}!i', $data, $response);
+				$response = preg_replace('!\$\{'.$i.'\|clean\}!i', parserUrl($data), $response);
+				$response = preg_replace('!\$\{'.$i.'\|ucfirst\}!i', ucfirst($data), $response);
+			}
+		}
+		if (!empty($varianceItem->matchingKeyword) && count($varianceItem->matchingKeyword) > 0) {
+			$data = mb_strtolower($varianceItem->matchingKeyword[0]);
+			$response = preg_replace('!\$\{keyword\}!i', $data, $response);
+		}
+		return $response;
+	}
+	
+	public function generateAnswer($author, $message, $date) {
+		// Load knowledge file
+		if (empty($this->knowledges) && NULL == $this->loadKnowledge()) {
+			return 'Rahh, someone eat my brain!';
+		}
+		$synonyms = $this->knowledges->synonyms;
+		$knowledge = $this->knowledges->keywords;
+
+		$bestpriority=-2;
+		if (empty($message)){
+			$message = 'Hello';
+		}
+		//$message = strtoupper($message);
+
+		// -- Best keyword priority
+		$keywordItem = $this->findBestPriorityKeyword($message);
+		
+		// -- Best variance for this keyword
+		$varianceItem = $this->findBestVariance($message, $keywordItem);
+		$response = $this->getResponse($varianceItem);
+		
+		echo 'Me: '.$message.'<br />';
+		// echo 'ResponseV0: '.$this->generateAnswerV0($author, $message, $date).'<br />';
+		echo 'Response: ';
+		return $response;
+	}
+	
 	
 	public function generateAnswerV0($author, $message, $date) {
 		// setup initial variables and values
@@ -268,113 +409,6 @@ $bestpriority][$vcount], 1);
 		// $originalMessage = new Message("Me", $originalstring);
 		// $originalMessage->toString();
 		// return new Message(self::$botName, $response);
-		return $response;
-	}
-	
-	public function findBestPriorityKeyword($message) {
-		$bestPriority = -2;
-		$matchingKeywordItem = '';
-		// Loop over keywords
-		foreach($this->knowledges->keywords AS $keywordItem) {
-			// Better priority and matching keyword (or it is the default one)
-			if ($keywordItem->priority > $bestPriority
-				&& (empty($keywordItem->keyword)
-					|| preg_match('!(?:^|\s|[_-])('.implode('|', $keywordItem->keyword).')(?:$|\s|[\'_-])!i', $message, $matching))) {
-				$bestPriority = $keywordItem->priority;
-				$matchingKeywordItem = $keywordItem;
-				if (!empty($matching)) {
-					array_shift($matching);
-					$matchingKeywordItem->matchingKeyword = $matching;
-				}
-			}
-		}
-		return $matchingKeywordItem;
-	}
-	
-	public function findBestVariance($message, $keyword) {
-		// Verify
-		if (empty($keyword)) {
-			logger('Error: hum, this keyword item is kind of empty', __LINE__);
-			return;
-		}
-		
-		$bestPriority = -2;
-		$matchingVarianceItem;
-		// Search best variance
-		if (!empty($keyword->variances)) {
-			foreach($keyword->variances AS $varianceItem) {
-				$varianceSize = strlen($varianceItem->variance);
-				if ($varianceSize > $bestPriority 
-						&& preg_match_all('!'.$varianceItem->varianceRegexable.'!is', $message, $matching)) {
-					$bestPriority = $varianceSize;
-					$matchingVarianceItem = $varianceItem;
-					if (!empty($matching)) {
-						array_shift($matching);
-						$matchingVarianceItem->matchingData = $matching;
-					}
-				}
-			}
-		}
-		// No variance found? Use default responses
-		if (empty($matchingVarianceItem->responses)) {
-			$matchingVarianceItem->responses = $keyword->defaultResponses;
-		}
-		$matchingVarianceItem->matchingKeyword = @$keyword->matchingKeyword;
-		return $matchingVarianceItem;
-	}
-	
-	public function getResponse($varianceItem) {
-		// Verify
-		if (empty($varianceItem->responses)) {
-			return 'Ouch !';
-		}
-		
-		// Select random response
-		$index = mt_rand(0, count($varianceItem->responses)-1);
-		$response = $varianceItem->responses[$index];
-		
-		// Post traitment
-		if (strstr($response, '${time}')) {
-			$nowDate = new DateTime(null, new DateTimeZone('Europe/Paris'));
-			$response = preg_replace('!\$\{time\}!i', $nowDate->format('H\hi'), $response);
-		}
-		if (!empty($varianceItem->matchingData) && count($varianceItem->matchingData) > 0) {
-			foreach($varianceItem->matchingData AS $i => $data) {
-				$data = mb_strtolower($data[0]);
-				$response = preg_replace('!\$\{'.$i.'\}!i', $data, $response);
-				$response = preg_replace('!\$\{'.$i.'\|clean\}!i', parserUrl($data), $response);
-				$response = preg_replace('!\$\{'.$i.'\|ucfirst\}!i', ucfirst($data), $response);
-			}
-		}
-		if (!empty($varianceItem->matchingKeyword) && count($varianceItem->matchingKeyword) > 0) {
-			$data = mb_strtolower($varianceItem->matchingKeyword[0]);
-			$response = preg_replace('!\$\{keyword\}!i', $data, $response);
-		}
-		return $response;
-	}
-	
-	public function generateAnswer($author, $message, $date) {
-		// Load knowledge file
-		$this->loadKnowledge();
-		$synonyms = $this->knowledges->synonyms;
-		$knowledge = $this->knowledges->keywords;
-
-		$bestpriority=-2;
-		if (empty($message)){
-			$message = 'Hello';
-		}
-		//$message = strtoupper($message);
-
-		// -- Best keyword priority
-		$keywordItem = $this->findBestPriorityKeyword($message);
-		
-		// -- Best variance for this keyword
-		$varianceItem = $this->findBestVariance($message, $keywordItem);
-		$response = $this->getResponse($varianceItem);
-		
-		echo 'Me: '.$message.'<br />';
-		// echo 'ResponseV0: '.$this->generateAnswerV0($author, $message, $date).'<br />';
-		echo 'Response: ';
 		return $response;
 	}
 	
