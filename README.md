@@ -10,10 +10,18 @@ Installation
 ------------
 Just download, copy and past. No configuration is required because it is just an algorithm.
 
+    require '../vendor/autoload.php';
+    use Fylhan\TchatBot\TchatBot;
+
+    header("Content-Type: text/html; charset=UTF-8");
+    $bot = new TchatBot();
+    echo $bot->generateAnswer('Bnmaster', 'Bonjour mon ami', time()).'<br />';
+    // May display for example: 'Salutations noble ami.'
+
 
 How to test?
 -----------
-Launch the file [test.php](https://github.com/Fylhan/tchatbot/blob/master/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
+Launch the file [test.php](https://github.com/Fylhan/tchatbot/blob/master/test/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
 
 ![Tchatbot discussion example](https://raw.github.com/Fylhan/tchatbot/master/doc/tchatbot-example.png)
 
@@ -32,7 +40,9 @@ A lot of things are in progress!
 - [ ] Provide a way to select between several brains
 - [ ] Manage several langage
 - [ ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
-- [ ] Add Composer
+- [x] Add Composer support
+- [ ] Check and improve folder structure
+- [ ] Add unit tests
 - [ ] Add documentation
 - [ ] Increase knowledge syntax possibilities
 - [ ] Manage several charset, not only UTF-8
