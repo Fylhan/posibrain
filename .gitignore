@@ -1,4 +1,5 @@
 bnbox/
 vendor/
 logs/
+*_computed.json
 *.lock

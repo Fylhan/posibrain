@@ -1,5 +1,7 @@
 <?php
 
+namespace Fylhan\TchatBot;
+
 function parserI($int) {
 	return intval(trim($int));
 }

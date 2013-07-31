@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+set_time_limit(0);
+
+require 'vendor/autoload.php';
+
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+use Fylhan\TchatBot\TchatBot;
+
+
+$console = new Application();
+
+// Add command
+$console
+	->register('submit')
+	->setDefinition(array(
+		new InputArgument('message', InputArgument::REQUIRED, 'Message of the requestor'),
+		new InputArgument('name', InputArgument::OPTIONAL, 'Name of the requestor'),
+	))
+	->setDescription('Submit a question to a tchatbot')
+	->setCode(function (InputInterface $input, OutputInterface $output) {
+		$userName = $input->getArgument('name');
+		if (empty($userName)) {
+			$userName = 'Anonymous';
+		}
+		$userMessage = $input->getArgument('message');
+		
+		$bot = new TchatBot();
+		list($botName, $botMessage) = $bot->generateAnswer($userName, $userMessage, time());
+
+		$output->writeln(sprintf('%s: %s', utf8_decode($botName), utf8_decode($botMessage)));
+	})
+;
+
+// Run
+$console->run();
