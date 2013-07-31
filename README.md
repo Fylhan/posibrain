@@ -45,19 +45,19 @@ A documentation will come.
 Work in progress
 ----------------
 A lot of things are in progress!
-- [    ] Update the first brain's knowledge
-- [    ] Provide a way to select between several brains
-- [    ] Manage several langage
-- [    ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
-- [||||] Add Composer support
-- [|   ] Check and improve folder structure
-- [    ] Add unit tests
-- [    ] Add documentation
-- [    ] Increase knowledge syntax possibilities
-- [    ] Manage several charset, not only UTF-8
-- [    ] Add more and more intelligence !
-- [    ] Create an interactive tchat example
-- [||  ] Add command line support
+- [▒▒▒▒ 0% ] Update the first brain's knowledge
+- [▒▒▒▒ 0% ] Provide a way to select between several brains
+- [▒▒▒▒ 0% ] Manage several langage
+- [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
+- [████100%] Add Composer support
+- [█▒▒▒ 25%] Check and improve folder structure
+- [▒▒▒▒ 0% ] Add unit tests
+- [▒▒▒▒ 0% ] Add documentation
+- [▒▒▒▒ 0% ] Increase knowledge syntax possibilities
+- [▒▒▒▒ 0% ] Manage several charset, not only UTF-8
+- [▒▒▒▒ 0% ] Add more and more intelligence !
+- [▒▒▒▒ 0% ] Create an interactive tchat example
+- [██▒▒ 50%] Add command line support
 
 
 Licencing
