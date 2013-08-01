@@ -5,16 +5,13 @@ namespace Fylhan\TchatBot;
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-07-11
+ * @updated 2013-08-01
  */
 interface ITchatBot
 {
-	public function isTriggered($string);
+	public function isTriggered($userMessage);
 
-	public function loadKnowledge();
-
-	public function generateKnowledgeCache();
-
-	public function generateAnswer($author, $string, $date);
+	public function generateAnswer($userName, $userMessage, $dateTime);
 }
 
 

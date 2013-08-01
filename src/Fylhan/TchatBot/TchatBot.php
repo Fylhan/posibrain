@@ -2,11 +2,9 @@
 
 namespace Fylhan\TchatBot;
 
-use Seld\JsonLint\JsonParser;
-use Seld\JsonLint\ParsingException;
-
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+
+use Fylhan\TchatBot\BrainManager;
 
 include_once('tools.php');
 
@@ -14,110 +12,77 @@ include_once('tools.php');
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-07-11
- * @updated 2013-07-31
+ * @updated 2013-08-01
  */
 class TchatBot implements ITchatBot
 {
 	private static $logger = NULL;
 	private $config;
+	private $brainManager;
 	private $knowledges;
 
 
 	public function __construct($params=array()) {
+		// Logger
 		if (NULL == self::$logger) {
-			self::$logger = new Logger('TchatBot');
-			if (!is_dir(__DIR__.'/../../../logs/')) {
-				mkdir(__DIR__.'/../../../logs/');
-				chmod(__DIR__.'/../../../logs/', '755');
+			self::$logger = new Logger(__CLASS__);
+			if (!empty($params) && isset($params['loggerHandler'])) {
+				self::$logger->pushHandler($params['loggerHandler']);
 			}
-			self::$logger->pushHandler(new StreamHandler(__DIR__.'/../../../logs/log.log', Logger::DEBUG));
 		}
 
-		$this->config = new TchatBotConfig($params);
+		// Config
+		$this->config = new TchatBotConfig($params);// TODO: DI
+		
+		// Brain Manager
+		$this->brainManager = new BrainManager($params);// TODO: DI
 		
 		// Init seed for random values
 		mt_srand((double)microtime()*1000000);
 	}
 
 
+	/**
+	 * @Override
+	 */
 	public function isTriggered($content) {
-		return (NULL != $content && startsWith('@Hari', $content));
+		return (NULL != $content);
 	}
 
-	public function loadKnowledge() {
-		self::$logger->addDebug(__FUNCTION__);
-		if (!is_file($this->config->getBrainsFolder().'knowledge.php')) {
-			if (!$this->generateKnowledgeCache()) {
-				self::$logger->addWarning('Can\'t load knowledge');
-				return NULL;
-			}
-		}
-		// include($this->brainsFolder.'knowledge.php');
-		return preg_split('!\n!', file_get_contents($this->config->getBrainsFolder().$this->config->getKnowledgeFile()));
-	}
-	
-	private function loadJsonFile($filepath) {
-		// Load JSON file
-		$data = file_get_contents($filepath);
-		// Clean
-		$data = cleanJsonString($data);
-
-		// Parse JSON
-		try {
-			$parser = new JsonParser();
-			$knowledge = $parser->parse($data, JsonParser::ALLOW_DUPLICATE_KEYS);
-		}
-		catch(ParsingException $e) {
-			self::$logger->addWarning('Can\'t load JSON file "'.$filepath.'": '.$e->getMessage());
+	/**
+	 * @Override
+	 */
+	public function generateAnswer($userName, $userMessage, $dateTime) {
+		// Don't trigger this bot
+		if (!$this->isTriggered($userMessage)) {
 			return NULL;
 		}
-		return $knowledge;
-	}
-	public function generateKnowledgeCache() {
-		// -- Load JSON knowledge
-		$synonyms = $this->loadJsonFile($this->config->getBrainsFolder().'synonyms.json');
-		$knowledge = $this->loadJsonFile($this->config->getBrainsFolder().'knowledge.json');
+		
+		// -- Load knowledge file
+		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
+			return 'Rahh, someone eat my brain!';
+		}
+		$synonyms = $this->knowledges->synonyms;
+		$knowledge = $this->knowledges->keywords;
 
-		if (NULL == $synonyms || NULL == $knowledge) {
-			return false;
+		// -- Generate reply
+		// - Check User Message
+		if (empty($userMessage)){
+			$message = 'Hello';
 		}
 		
-		// Pre-compute synonyms
-		foreach($knowledge->keywords AS $k => $keyword) {
-			if (!empty($keyword->variances)) {
-				$keywordSynonyms = $keyword->keyword;
-				$variances = $keyword->variances;
-				$size = count($variances);
-				for($i=0; $i<$size; $i++) {
-					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{keyword\}!U', '('.implode('|', $keywordSynonyms).')', 
-	$variances[$i]->variance);
-					preg_match_all('!@\{([^\}]+)\}!U', $keyword->variances[$i]->varianceRegexable, $matchingSynonyms);
-					if (NULL != $matchingSynonyms && !empty($matchingSynonyms) && !empty($matchingSynonyms[1])) {
-						foreach($matchingSynonyms[1] AS $synonym) {
-							$keyword->variances[$i]->varianceRegexable = preg_replace('!@\{'.$synonym.'\}!U', '('.implode('|', $this->
-getSynonyms(
-	$synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varianceRegexable);
-						}
-					}
-				}
-			}
-			$this->knowledges->keywords[$k] = $keyword;
-		}
-		$this->knowledges->synonyms = $synonyms;
-		file_put_contents($this->config->getBrainsFolder().'knowledge_computed.json', json_encode($this->knowledges));
-		return true;
-	}
-	
-	private function getSynonyms($synonymKey, $synonymList) {
-		foreach($synonymList AS $synonym) {
-			if ($synonym->key == $synonymKey) {
-				return $synonym->synonyms;
-			}
-		}
+		// - Best keyword priority
+		$keywordItem = $this->findBestPriorityKeyword($userMessage);
+		
+		// - Best variance for this keyword
+		$varianceItem = $this->findBestVariance($userMessage, $keywordItem);
+		$response = $this->getResponse($varianceItem);
+		
+		return array($this->config->getName(), $response);
 	}
 	
 	public function findBestPriorityKeyword($message) {
-		$bestPriority = -2;
+		$bestPriority = -1;
 		$matchingKeywordItem = '';
 		// Loop over keywords
 		foreach($this->knowledges->keywords AS $keywordItem) {
@@ -143,7 +108,7 @@ getSynonyms(
 			return;
 		}
 		
-		$bestPriority = -2;
+		$bestPriority = -1;
 		$matchingVarianceItem;
 		// Search best variance
 		if (!empty($keyword->variances)) {
@@ -197,31 +162,7 @@ getSynonyms(
 		}
 		return $response;
 	}
-	
-	public function generateAnswer($author, $message, $date) {
-		// Load knowledge file
-		if (empty($this->knowledges) && NULL == $this->loadKnowledge()) {
-			return 'Rahh, someone eat my brain!';
-		}
-		$synonyms = $this->knowledges->synonyms;
-		$knowledge = $this->knowledges->keywords;
 
-		$bestpriority=-2;
-		if (empty($message)){
-			$message = 'Hello';
-		}
-		//$message = strtoupper($message);
-
-		// -- Best keyword priority
-		$keywordItem = $this->findBestPriorityKeyword($message);
-		
-		// -- Best variance for this keyword
-		$varianceItem = $this->findBestVariance($message, $keywordItem);
-		$response = $this->getResponse($varianceItem);
-		
-		return array($this->config->getName(), $response);
-	}
-	
 
 	public function getConfig() {
 		return $this->config;
@@ -235,6 +176,10 @@ getSynonyms(
 	}
 	public function setKnowledges($knowledges) {
 		$this->knowledges = $knowledges;
+	}
+
+	public function setBrainManager($brainManager) {
+		$this->brainManager = $brainManager;
 	}
 }
 
