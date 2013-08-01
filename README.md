@@ -46,7 +46,7 @@ Work in progress
 ----------------
 A lot of things are in progress!
 - [▒▒▒▒ 0% ] Update the first brain's knowledge
-- [▒▒▒▒ 0% ] Provide a way to select between several brains
+- [█▒▒▒ 25% ] Provide a way to select between several brains
 - [▒▒▒▒ 0% ] Manage several langage
 - [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
 - [████100%] Add Composer support
