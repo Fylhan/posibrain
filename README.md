@@ -6,18 +6,27 @@ Nothing very intelligent at the moment, a set of predefined sentances lead to an
 
 Based on this [Eliza PHP tchatbot implementation](http://www.perkiset.org/forum/all_things_general_tech/artificial_intelligence_as_we_know_it_today-t1177.5.html;wap2=), at least for the concept.
 
-Installation
+Installation & Usage
 ------------
-Just download, copy and past. No configuration is required because it is just an algorithm.
+User Composer, or just download, copy and paste. No configuration is required because it is just an algorithm.
+
+You can easily use it in your code:
 
     require '../vendor/autoload.php';
     use Fylhan\TchatBot\TchatBot;
 
     header("Content-Type: text/html; charset=UTF-8");
     $bot = new TchatBot();
-    echo $bot->generateAnswer('Bnmaster', 'Bonjour mon ami', time()).'<br />';
-    // May display for example: 'Salutations noble ami.'
+    list($botName, $botMessage) = $bot->generateAnswer('Bnmaster', 'Bonjour mon ami', time());
+    echo $botName.' : '.$botMessage.'<br />';
+    // May display for example: 'Hari S.: Salutations noble ami.'
 
+
+Or even using command line:
+
+    Usage: php app/console submit "User message" ["User name"]
+    > php app/console submit "Bonjour mon ami"
+    Hari S.: Salutations noble ami.
 
 How to test?
 -----------
@@ -36,18 +45,19 @@ A documentation will come.
 Work in progress
 ----------------
 A lot of things are in progress!
-- [ ] Update the first brain's knowledge
-- [ ] Provide a way to select between several brains
-- [ ] Manage several langage
-- [ ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
-- [x] Add Composer support
-- [ ] Check and improve folder structure
-- [ ] Add unit tests
-- [ ] Add documentation
-- [ ] Increase knowledge syntax possibilities
-- [ ] Manage several charset, not only UTF-8
-- [ ] Add more and more intelligence !
-- [ ] Create an interactive tchat example
+- [▒▒▒▒ 0% ] Update the first brain's knowledge
+- [▒▒▒▒ 0% ] Provide a way to select between several brains
+- [▒▒▒▒ 0% ] Manage several langage
+- [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
+- [████100%] Add Composer support
+- [█▒▒▒ 25%] Check and improve folder structure
+- [▒▒▒▒ 0% ] Add unit tests
+- [▒▒▒▒ 0% ] Add documentation
+- [▒▒▒▒ 0% ] Increase knowledge syntax possibilities
+- [▒▒▒▒ 0% ] Manage several charset, not only UTF-8
+- [▒▒▒▒ 0% ] Add more and more intelligence !
+- [▒▒▒▒ 0% ] Create an interactive tchat example
+- [██▒▒ 50%] Add command line support
 
 
 Licencing
