@@ -10,7 +10,7 @@ Installation & Usage
 ------------
 Use Composer to download and install this library. TO do so, create a folder and a file composer.json in it. Add this to this file:
     "require": {
-        "fylhan/posibrain": "1.0.*",
+        "fylhan/posibrain": "0.*.*",
  }
 And install it using the following command:
     > php composer.php install
