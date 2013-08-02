@@ -1,6 +1,8 @@
 <?php
 
-namespace Fylhan\TchatBot;
+namespace Posibrain;
+
+define('MODE', 'dev');
 
 function parserI($int) {
 	return intval(trim($int));
@@ -290,8 +292,8 @@ function br2nl($str) {
  */
 function cleanJsonString($data) {
 	$data = trim($data);
-	$data = preg_replace('!\s*//[^"]*\n!U', '\n', $data);
-	$data = preg_replace('!/\*[^"]*\*/!U', '', $data);
+	$data = preg_replace('!\s*//[^\.]*\n!U', '\n', $data);//TODO: it doesn't accept the dot in comments. But without it may take into account URLs
+	$data = preg_replace('!/\*.*\*/\s*!sU', '', $data);
 	$data = !startsWith('{', $data) ? '{'.$data : $data;
 	$data = !endsWith('}', $data) ? $data.'}' : $data;
 	$data = preg_replace('!,(\s*[}\]])!U', '$1', $data);

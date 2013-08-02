@@ -1,0 +1,9 @@
+{
+"id": "sammy",
+"name": "R. Sammy",
+"conceptorName": "Fylhan",
+"birthday": "2013-07-11",
+/*"trigger": {
+	"called": ["Sammy", "R. Sammy"],
+}*/
+}

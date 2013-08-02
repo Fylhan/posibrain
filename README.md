@@ -1,4 +1,4 @@
-TchatBot
+Posibrain
 ========
 
 A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?
@@ -8,7 +8,14 @@ Based on this [Eliza PHP tchatbot implementation](http://www.perkiset.org/forum/
 
 Installation & Usage
 ------------
-User Composer, or just download, copy and paste. No configuration is required because it is just an algorithm.
+Use Composer to download and install this library. TO do so, create a folder and a file composer.json in it. Add this to this file:
+    "require": {
+        "fylhan/posibrain": "1.0.*",
+ }
+And install it using the following command:
+    > php composer.php install
+You can also download it, and also download all dependencies and paste them into a "vendor" folder.
+No configuration is required because it is just an algorithm.
 
 You can easily use it in your code:
 
@@ -30,9 +37,9 @@ Or even using command line:
 
 How to test?
 -----------
-Launch the file [test.php](https://github.com/Fylhan/tchatbot/blob/master/test/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
+Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/test/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
 
-![Tchatbot discussion example](https://raw.github.com/Fylhan/tchatbot/master/doc/tchatbot-example.png)
+![Posibrain discussion example](https://raw.github.com/Fylhan/posibrain/master/doc/tchatbot-example.png)
 
 An interactive tchat implementation will come. At the moment, this tchatbot is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speack with him in french by beginning your sentances by "@Hari".
 
@@ -44,25 +51,29 @@ A documentation will come.
 
 Work in progress
 ----------------
-A lot of things are in progress!
-- [▒▒▒▒ 0% ] Update the first brain's knowledge
-- [█▒▒▒ 25% ] Provide a way to select between several brains
-- [▒▒▒▒ 0% ] Manage several langage
-- [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
+A lot of things are in progress! I have created a first version of the bot algorithm, with a quick knowledge database. I am currently working on the package improvement (command line, API usability, brain selection, languages, plugin management). This is not the main goal of this project, but this is important to use it, and (eventually) contribute to it. Then... we will be able to increase this tchatbot intelligence :D
+
 - [████100%] Add Composer support
-- [█▒▒▒ 25%] Check and improve folder structure
-- [▒▒▒▒ 0% ] Add unit tests
-- [▒▒▒▒ 0% ] Add documentation
-- [▒▒▒▒ 0% ] Increase knowledge syntax possibilities
-- [▒▒▒▒ 0% ] Manage several charset, not only UTF-8
-- [▒▒▒▒ 0% ] Add more and more intelligence !
+- [███▒75%] Provide a way to select between several brains
+- [███▒75% ] Manage several langages (only fr translation is done currently)(if a translation doesn't exist, the english/french one has to be taken by default)
+- [█▒▒▒25% ] Manage several charsets, not only UTF-8
+- [███▒75%] Check and improve folder structure/ Now: src/Posibrain
+- [██▒▒50%] Add command line support (add options in "submit question" command, add command to list available bots)
+- [▒▒▒▒ 0% ] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...)
+- [▒▒▒▒ 0% ] Remove lib dependencies. The idea is to provide a basic implementation that can be used if dependencies are not downloaded. Dependencies will become optional (and nice to have), and TchatBot will be light weight(er).
 - [▒▒▒▒ 0% ] Create an interactive tchat example
-- [██▒▒ 50%] Add command line support
+- [████100% ] Find a proper name -> Posibrain. Inspired by the "Robots" books of Isaac Asimov and his positronic robots.
+- [▒▒▒▒ 0% ] Add unit tests
+- [▒▒▒▒ 0% ] Add proper documentation
+- [▒▒▒▒ 0% ] Update the first brain's knowledge
+- [▒▒▒▒ 0% ] Increase knowledge syntax possibilities
+- [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
+- [▒▒▒▒ 0% ] Add more and more intelligence!
 
 
 Licencing
 --------
-This pieces of code are free software under under [LGPL v2.1](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information.
+This piece of code is a free software under [LGPL v2.1](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information.
 
 To summarize:
 * Required

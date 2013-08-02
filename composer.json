@@ -1,5 +1,5 @@
 {
-	"name": "fylhan/tchatbot",
+	"name": "fylhan/posibrain",
 	"description": "A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?",
 	"keywords": ["tchatbot", "ia"],
 	"authors": [
@@ -17,6 +17,6 @@
 		"symfony/console": "2.3.*"
 	},
 	"autoload": {
-		"psr-0": {"Fylhan\\TchatBot": "src/"}
+		"psr-0": {"Posibrain": "src/"}
 	}
 }

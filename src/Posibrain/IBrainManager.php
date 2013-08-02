@@ -1,6 +1,6 @@
 <?php
 
-namespace Fylhan\TchatBot;
+namespace Posibrain;
 
 
 interface IBrainManager {

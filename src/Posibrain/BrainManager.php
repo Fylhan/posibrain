@@ -1,6 +1,6 @@
 <?php
 
-namespace Fylhan\TchatBot;
+namespace Posibrain;
 
 use Seld\JsonLint\JsonParser;
 use Seld\JsonLint\ParsingException;
@@ -35,13 +35,13 @@ class BrainManager implements IBrainManager
 	 */
 	public function loadBrain($config) {
 		self::$logger->addDebug(__FUNCTION__);
-		if (!is_file($config->getBrainsFolder().'knowledge_computed.json')) {
+		if ('dev' == MODE || !is_file($config->getComputedKnowledgeFile())) {
 			if (!$this->generateKnowledgeCache($config)) {
 				self::$logger->addWarning('Can\'t load knowledge');
 				return NULL;
 			}
 		}
-		$knowledges = $this->loadJsonFile($config->getBrainsFolder().'knowledge_computed.json');
+		$knowledges = $this->loadJsonFile($config->getComputedKnowledgeFile());
 		return $knowledges;
 	}
 	
@@ -54,8 +54,9 @@ class BrainManager implements IBrainManager
 	 */
 	public function generateKnowledgeCache($config) {
 		// -- Load JSON knowledge
-		$synonyms = $this->loadJsonFile($config->getBrainsFolder().'synonyms.json');
-		$knowledge = $this->loadJsonFile($config->getBrainsFolder().'knowledge.json');
+		$identity = $this->loadJsonFile($config->getIdentityFile());
+		$synonyms = $this->loadJsonFile($config->getSynonymsFile());
+		$knowledge = $this->loadJsonFile($config->getKnowledgeFile());
 
 		if (NULL == $synonyms || NULL == $knowledge) {
 			return false;
@@ -81,9 +82,10 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 			}
 			$knowledges->keywords[$k] = $keyword;
 		}
+		$knowledges->identity = $identity;
 		$knowledges->synonyms = $synonyms;
 		// Store JSON cache
-		file_put_contents($config->getBrainsFolder().'knowledge_computed.json', json_encode($knowledges));
+		file_put_contents($config->getComputedKnowledgeFile(), json_encode($knowledges));
 		return true;
 	}
 	

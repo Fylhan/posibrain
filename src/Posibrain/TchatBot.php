@@ -1,10 +1,10 @@
 <?php
 
-namespace Fylhan\TchatBot;
+namespace Posibrain;
 
 use Monolog\Logger;
 
-use Fylhan\TchatBot\BrainManager;
+use Posibrain\BrainManager;
 
 include_once('tools.php');
 
@@ -22,7 +22,7 @@ class TchatBot implements ITchatBot
 	private $knowledges;
 
 
-	public function __construct($params=array()) {
+	public function __construct($id='', $lang='', $params=array()) {
 		// Logger
 		if (NULL == self::$logger) {
 			self::$logger = new Logger(__CLASS__);
@@ -32,7 +32,7 @@ class TchatBot implements ITchatBot
 		}
 
 		// Config
-		$this->config = new TchatBotConfig($params);// TODO: DI
+		$this->config = new TchatBotConfig($id, $lang, $params);// TODO: DI
 		
 		// Brain Manager
 		$this->brainManager = new BrainManager($params);// TODO: DI
@@ -46,24 +46,38 @@ class TchatBot implements ITchatBot
 	 * @Override
 	 */
 	public function isTriggered($content) {
-		return (NULL != $content);
+		$triggered = (NULL != $content);
+		$identity = $this->knowledges->identity;
+		// Triggered by specific rules
+		if (!empty($identity->trigger)) {
+			// Called by his name
+			if (!empty($identity->trigger->called)) {
+				$triggered &= preg_match('!(?:^|\s|[_-])('.implode('|', $identity->trigger->called).')(?:$|\s|[\'_-])!i', $content);
+			}
+			// Specific sentance
+			if (!empty($identity->trigger->sentance)) {
+				$triggered &= preg_match('!('.implode('|', $identity->trigger->sentance).')!i', $content);
+			}
+		}
+		return $triggered;
 	}
 
 	/**
 	 * @Override
 	 */
 	public function generateAnswer($userName, $userMessage, $dateTime) {
-		// Don't trigger this bot
-		if (!$this->isTriggered($userMessage)) {
-			return NULL;
-		}
-		
 		// -- Load knowledge file
 		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
 			return 'Rahh, someone eat my brain!';
 		}
+		$identity = $this->knowledges->identity;
 		$synonyms = $this->knowledges->synonyms;
 		$knowledge = $this->knowledges->keywords;
+		
+		// Don't trigger this bot
+		if (!$this->isTriggered($userMessage)) {
+			return NULL;
+		}
 
 		// -- Generate reply
 		// - Check User Message
@@ -78,7 +92,7 @@ class TchatBot implements ITchatBot
 		$varianceItem = $this->findBestVariance($userMessage, $keywordItem);
 		$response = $this->getResponse($varianceItem);
 		
-		return array($this->config->getName(), $response);
+		return array($identity->name, $response);
 	}
 	
 	public function findBestPriorityKeyword($message) {
@@ -104,7 +118,7 @@ class TchatBot implements ITchatBot
 	public function findBestVariance($message, $keyword) {
 		// Verify
 		if (empty($keyword)) {
-			logger('Error: hum, this keyword item is kind of empty', __LINE__);
+			self::$logger->addError('Hum, this keyword item is kind of empty', $keyword);
 			return;
 		}
 		
