@@ -13,7 +13,7 @@ include_once('tools.php');
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-08-01
- * @updated 2013-08-01
+ * @updated 2013-08-23
  */
 class BrainManager implements IBrainManager
 {
@@ -34,11 +34,11 @@ class BrainManager implements IBrainManager
 	 * @Override
 	 */
 	public function loadBrain($config) {
-		self::$logger->addDebug(__FUNCTION__);
 		if ('dev' == MODE || !is_file($config->getComputedKnowledgeFile())) {
 			if (!$this->generateKnowledgeCache($config)) {
-				self::$logger->addWarning('Can\'t load knowledge');
-				return NULL;
+				self::$logger->addWarning('Can\'t load knowledge', $config);
+				$knowledges = $this->loadJsonFile($config->getNoKnowledgeFile());
+				return $knowledges;
 			}
 		}
 		$knowledges = $this->loadJsonFile($config->getComputedKnowledgeFile());
@@ -58,19 +58,23 @@ class BrainManager implements IBrainManager
 		$synonyms = $this->loadJsonFile($config->getSynonymsFile());
 		$knowledge = $this->loadJsonFile($config->getKnowledgeFile());
 
-		if (NULL == $synonyms || NULL == $knowledge) {
+		if (NULL == $identity || NULL == $synonyms || NULL == $knowledge) {
 			return false;
 		}
 		
-		// Pre-compute synonyms
 		foreach($knowledge->keywords AS $k => $keyword) {
+			// Pre-compute keyword
+			$keyword->keyword = preg_replace('!\$\{name\}!U', $identity->name, $keyword->keyword);
+			$keyword->keyword = preg_replace('!\$\{conceptorName\}!U', $identity->conceptorName, $keyword->keyword);
+			// Pre-compute synonyms
 			if (!empty($keyword->variances)) {
 				$keywordSynonyms = $keyword->keyword;
 				$variances = $keyword->variances;
 				$size = count($variances);
 				for($i=0; $i<$size; $i++) {
-					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{keyword\}!U', '('.implode('|', $keywordSynonyms).')', 
-	$variances[$i]->variance);
+					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{keyword\}!U', '('.implode('|', $keywordSynonyms).')', $variances[$i]->variance);
+					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{name\}!U', $identity->name, $variances[$i]->varianceRegexable);
+					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{conceptorName\}!U', $identity->conceptorName, $variances[$i]->varianceRegexable);
 					preg_match_all('!@\{([^\}]+)\}!U', $keyword->variances[$i]->varianceRegexable, $matchingSynonyms);
 					if (NULL != $matchingSynonyms && !empty($matchingSynonyms) && !empty($matchingSynonyms[1])) {
 						foreach($matchingSynonyms[1] AS $synonym) {
@@ -91,7 +95,11 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 	
 	private function loadJsonFile($filepath) {
 		// Load JSON file
-		$data = file_get_contents($filepath);
+		$data = @file_get_contents($filepath);
+		if (false === $data) {
+			self::$logger->addWarning('Can\'t load JSON file "'.$filepath.'"');
+			return NULL;
+		}
 		// Clean
 		$data = cleanJsonString($data);
 
@@ -101,7 +109,7 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 			$knowledge = $parser->parse($data, JsonParser::ALLOW_DUPLICATE_KEYS);
 		}
 		catch(ParsingException $e) {
-			self::$logger->addWarning('Can\'t load JSON file "'.$filepath.'": '.$e->getMessage());
+			self::$logger->addWarning('Can\'t parse JSON file "'.$filepath.'": '.$e->getMessage());
 			return NULL;
 		}
 		return $knowledge;

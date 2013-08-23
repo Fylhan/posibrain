@@ -32,10 +32,10 @@ class TchatBot implements ITchatBot
 		}
 
 		// Config
-		$this->config = new TchatBotConfig($id, $lang, $params);// TODO: DI
+		$this->config = new TchatBotConfig($id, $lang, $params);
 		
 		// Brain Manager
-		$this->brainManager = new BrainManager($params);// TODO: DI
+		$this->brainManager = new BrainManager($params);
 		
 		// Init seed for random values
 		mt_srand((double)microtime()*1000000);
@@ -68,7 +68,7 @@ class TchatBot implements ITchatBot
 	public function generateAnswer($userName, $userMessage, $dateTime) {
 		// -- Load knowledge file
 		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
-			return 'Rahh, someone eat my brain!';
+			return array('Qzhge', 'Rahh, someone eats my brain!');
 		}
 		$identity = $this->knowledges->identity;
 		$synonyms = $this->knowledges->synonyms;
@@ -86,16 +86,16 @@ class TchatBot implements ITchatBot
 		}
 		
 		// - Best keyword priority
-		$keywordItem = $this->findBestPriorityKeyword($userMessage);
+		$keywordItem = $this->findBestPriorityKeyword($userName, $userMessage);
 		
 		// - Best variance for this keyword
-		$varianceItem = $this->findBestVariance($userMessage, $keywordItem);
-		$response = $this->getResponse($varianceItem);
+		$varianceItem = $this->findBestVariance($userName, $userMessage, $keywordItem);
+		$response = $this->getResponse($userName, $userMessage, $varianceItem);
 		
 		return array($identity->name, $response);
 	}
 	
-	public function findBestPriorityKeyword($message) {
+	public function findBestPriorityKeyword($userName, $message) {
 		$bestPriority = -1;
 		$matchingKeywordItem = '';
 		// Loop over keywords
@@ -103,7 +103,7 @@ class TchatBot implements ITchatBot
 			// Better priority and matching keyword (or it is the default one)
 			if ($keywordItem->priority > $bestPriority
 				&& (empty($keywordItem->keyword)
-					|| preg_match('!(?:^|\s|[_-])('.implode('|', $keywordItem->keyword).')(?:$|\s|[\'_-])!i', $message, $matching))) {
+					|| preg_match('!(?:^|\s|[_-])('.implode('|', $keywordItem->keyword).')(?:$|\s|[\'_,;:-])!i', $message, $matching))) {
 				$bestPriority = $keywordItem->priority;
 				$matchingKeywordItem = $keywordItem;
 				if (!empty($matching)) {
@@ -115,7 +115,7 @@ class TchatBot implements ITchatBot
 		return $matchingKeywordItem;
 	}
 	
-	public function findBestVariance($message, $keyword) {
+	public function findBestVariance($userName, $message, $keyword) {
 		// Verify
 		if (empty($keyword)) {
 			self::$logger->addError('Hum, this keyword item is kind of empty', $keyword);
@@ -147,7 +147,7 @@ class TchatBot implements ITchatBot
 		return $matchingVarianceItem;
 	}
 	
-	public function getResponse($varianceItem) {
+	public function getResponse($userName, $userMessage, $varianceItem) {
 		// Verify
 		if (empty($varianceItem->responses)) {
 			return 'Ouch !';
@@ -161,6 +161,15 @@ class TchatBot implements ITchatBot
 		if (strstr($response, '${time}')) {
 			$nowDate = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
 			$response = preg_replace('!\$\{time\}!i', $nowDate->format('H\hi'), $response);
+		}
+		if (strstr($response, '${name}')) {
+			$response = preg_replace('!\$\{name\}!i', $this->knowledges->identity->name, $response);
+		}
+		if (strstr($response, '${conceptorName}')) {
+			$response = preg_replace('!\$\{conceptorName\}!i', $this->knowledges->identity->conceptorName, $response);
+		}
+		if (strstr($response, '${userName}')) {
+			$response = preg_replace('!\$\{userName\}!i', $userName, $response);
 		}
 		if (!empty($varianceItem->matchingData) && count($varianceItem->matchingData) > 0) {
 			foreach($varianceItem->matchingData AS $i => $data) {
@@ -178,20 +187,20 @@ class TchatBot implements ITchatBot
 	}
 
 
-	public function getConfig() {
-		return $this->config;
-	}
-	public function setConfig($config) {
-		$this->config = $config;
-	}
-
 	public function getKnowledges() {
 		return $this->knowledges;
 	}
 	public function setKnowledges($knowledges) {
 		$this->knowledges = $knowledges;
 	}
-
+	
+	public function getConfig() {
+		return $this->config;
+	}
+	public function setConfig($config) {
+		$this->config = $config;
+	}
+	
 	public function setBrainManager($brainManager) {
 		$this->brainManager = $brainManager;
 	}

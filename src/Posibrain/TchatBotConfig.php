@@ -28,17 +28,54 @@ class TchatBotConfig
 			}
 		}
 
-		// Configure the robot
-		$this->id = $id;
-		$this->lang = $lang;
-		$this->brainsFolder = @$params['brainsFolder'].(!endsWith('/', @$params['brainsFolder']) ? '/' : '');
-		$this->setCharset(isset($params['charset']) ? $params['charset'] : 'UTF-8');
+		// Default bot configuration
+		$defaultConfig = array('id' => 'sammy',
+							'lang' => 'fr',
+							'brainsFolder' => __DIR__.'/brains/',
+							'charset' => 'UTF-8',
+							);
 		
-		if (!is_file($this->getKnowledgeFile())) {
-			self::$logger->addError('No such bot: load crazy stupid R. Sammy', array($id, $lang, $params));
-			$this->id = 'sammy';
-			$this->lang = 'fr';
-			$this->brainsFolder = __DIR__.'/brains/';
+		// Configure the robot
+		$this->id = !empty($id) ? $id : $defaultConfig['id'];
+		$this->lang = !empty($lang) ? $lang : $defaultConfig['lang'];
+		$this->brainsFolder = !empty($params['brainsFolder'])  ? $params['brainsFolder'] : $defaultConfig['brainsFolder'];
+		$this->brainsFolder .= !endsWith('/', $this->brainsFolder) ? '/' : '';
+		$this->setCharset(isset($params['charset']) ? $params['charset'] : $defaultConfig['charset']);
+
+		$tryNumber = 0;
+		while (!is_file($this->getKnowledgeFile())) {
+			$tryNumber++;
+			// Try to change ID
+			if (1 == $tryNumber) {
+				if ($this->id == $defaultConfig['id']) {
+					$tryNumber++;
+				}
+				$this->id = $defaultConfig['id'];
+				self::$logger->addWarning('No such bot: load crazy stupid '.$this->id.' ('.$this->lang.')', array($id, $lang, $params));
+				continue;
+			}
+			// Try to change lang
+			if (2 == $tryNumber) {
+				if ($this->lang == $defaultConfig['lang']) {
+					$tryNumber++;
+				}
+				$this->lang = $defaultConfig['lang'];
+				self::$logger->addWarning('Still no such bot: load crazy stupid '.$this->id.' ('.$this->lang.')', array($id, $lang, $params));
+				continue;
+			}
+			// Try to change the folder
+			if (3 == $tryNumber) {
+				if ($this->brainsFolder == $defaultConfig['brainsFolder']) {
+					$tryNumber++;
+				}
+				$this->brainsFolder = $defaultConfig['brainsFolder'];
+				continue;
+			}
+			// Arg!
+			else {
+				self::$logger->addError('Definitely no bot: this tchat is going to be very stupid!', array($id, $lang, $params));
+				break;
+			}
 		}
 	}
 
@@ -57,6 +94,10 @@ class TchatBotConfig
 	
 	public function getComputedKnowledgeFile() {
 		return $this->brainsFolder.$this->id.'/'.$this->lang.'_knowledge_computed.json';
+	}
+	
+	public function getNoKnowledgeFile() {
+		return __DIR__.'/brains/no-knowledge.json';
 	}
 	
 

@@ -28,8 +28,15 @@ $logger->addWarning("Launch test");
 
 // Launch Test
 $botSammy = new TchatBot('', '', array('loggerHandler' => $loggerHandler));
-$botDaneel = new TchatBot('daneel', 'fr', array('loggerHandler' => $loggerHandler));
-displayDiscussion($botDaneel, 'Bnmaster', 'Bonjour Daneel', time());
+$botDaneel1 = new TchatBot('daneel', 'en', array('loggerHandler' => $loggerHandler));
+$botDaneel2 = new TchatBot('daneel', 'fr', array('loggerHandler' => $loggerHandler));
+displayDiscussion($botDaneel1, 'Bnmaster', 'Quel est ton nom ?', time());
+displayDiscussion($botDaneel2, 'Bnmaster', 'Quel est ton nom ?', time());
+displayDiscussion($botDaneel2, 'Bnmaster', 'Ton nom est plutôt moche, non ?', time());
+displayDiscussion($botDaneel2, 'Bnmaster', 'RSammy, c\'est plutôt moche, non ?', time());
+displayDiscussion($botDaneel2, 'Bnmaster', 'Bonjour Daneel', time());
+displayDiscussion($botSammy, 'Bnmaster', 'R. Sammy c\'est super laid !', time());
+displayDiscussion($botSammy, 'Bnmaster', 'Bonjour R. Sammy', time());
 displayDiscussion($botSammy, 'Bnmaster', 'Bonjour Sammy', time());
 displayDiscussion($botSammy, 'Bnmaster', '@BN Bonjour mon ami', time());
 displayDiscussion($botSammy, 'Bnmaster', 'Bonjour mon ami', time());

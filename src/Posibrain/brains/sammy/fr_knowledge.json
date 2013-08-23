@@ -155,28 +155,41 @@
 		]
 	},
 	{
-		"keyword": ["Nom", "Pseudo"],
+		"keyword": ["Nom", "Pseudo", "Prénom", "${name}"],
 		"priority": 2,
 		"defaultResponses": [
 			"Je n'ai pas une bonne mémoire des noms.",
 		],
 		"variances": [
 			{
+				"variance": "${name}",
+				"responses": [
+					"Oui ?",
+				]
+			},
+			{
 				"variance": "ton ${keyword}",
 				"responses": [
 					"Pourquoi mon nom est-il important ?",
 					"Comment trouves-tu mon nom ?",
-					"Tu ne sais pas lire ? Je m'appelle Hari Seldon.",
+					"Tu ne sais pas lire ? Je m'appelle ${name}.",
 				]
 			},
 			{
-				"variance": "ton ${keyword}(.*)@{moche}",
+				"variance": "(?:ton ${keyword}.*@{moche}|@{moche}.*ton ${keyword})",
 				"responses": [
 					"Et ton nom à toi alors !",
 					"Restons poli, veux-tu ?",
 					"C'est toi le ${1}",
 				]
 			},
+			{
+				"variance": "(?:@{moche}.*${name}|${name}.*@{moche})",
+				"responses": [
+					"Et ton nom alors ?",
+					"${userName} est ${1} aussi.",
+				]
+			}
 		]
 	},
 	{

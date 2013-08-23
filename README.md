@@ -61,8 +61,8 @@ Work in progress
 A lot of things are in progress! I have created a first version of the bot algorithm, with a quick knowledge database. I am currently working on the package improvement (command line, API usability, brain selection, languages, plugin management). This is not the main goal of this project, but this is important to use it, and (eventually) contribute to it. Then... we will be able to increase this tchatbot intelligence :D
 
 - [████100%] Add Composer support
-- [███▒75%] Provide a way to select between several brains
-- [███▒75% ] Manage several langages (only fr translation is done currently)(if a translation doesn't exist, the english/french one has to be taken by default)
+- [████98%] Provide a way to select between several brains. [miss unit tests]
+- [████98% ] Manage several langages (only fr translation is done currently). [miss unit tests]
 - [█▒▒▒25% ] Manage several charsets, not only UTF-8
 - [███▒75%] Check and improve folder structure/ Now: src/Posibrain
 - [██▒▒50%] Add command line support (add options in "submit question" command, add command to list available bots)
@@ -72,8 +72,8 @@ A lot of things are in progress! I have created a first version of the bot algor
 - [████100% ] Find a proper name -> Posibrain. Inspired by the "Robots" books of Isaac Asimov and his positronic robots.
 - [▒▒▒▒ 0% ] Add unit tests
 - [▒▒▒▒ 0% ] Add proper documentation
-- [▒▒▒▒ 0% ] Update the first brain's knowledge
-- [▒▒▒▒ 0% ] Increase knowledge syntax possibilities
+- [█▒▒▒10% ] Update the first brain's knowledge
+- [█▒▒▒10% ] Increase knowledge syntax possibilities (use Twig syntax instead if possible, add support for ${name, conceptorName, lang, birthday, userName} everywhere in responses or questions.
 - [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
 - [▒▒▒▒ 0% ] Add more and more intelligence!
 
