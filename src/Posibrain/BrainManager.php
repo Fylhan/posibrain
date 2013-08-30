@@ -13,7 +13,7 @@ include_once('tools.php');
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-08-01
- * @updated 2013-08-23
+ * @updated 2013-08-30
  */
 class BrainManager implements IBrainManager
 {
@@ -41,7 +41,7 @@ class BrainManager implements IBrainManager
 				return $knowledges;
 			}
 		}
-		$knowledges = $this->loadJsonFile($config->getComputedKnowledgeFile());
+		$knowledges = $this->loadJsonFile($config->getComputedKnowledgeFile(), $config->getCharset());
 		return $knowledges;
 	}
 	
@@ -54,9 +54,9 @@ class BrainManager implements IBrainManager
 	 */
 	public function generateKnowledgeCache($config) {
 		// -- Load JSON knowledge
-		$identity = $this->loadJsonFile($config->getIdentityFile());
-		$synonyms = $this->loadJsonFile($config->getSynonymsFile());
-		$knowledge = $this->loadJsonFile($config->getKnowledgeFile());
+		$identity = $this->loadJsonFile($config->getIdentityFile(), $config->getCharset());
+		$synonyms = $this->loadJsonFile($config->getSynonymsFile(), $config->getCharset());
+		$knowledge = $this->loadJsonFile($config->getKnowledgeFile(), $config->getCharset());
 
 		if (NULL == $identity || NULL == $synonyms || NULL == $knowledge) {
 			return false;
@@ -89,11 +89,11 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 		$knowledges->identity = $identity;
 		$knowledges->synonyms = $synonyms;
 		// Store JSON cache
-		file_put_contents($config->getComputedKnowledgeFile(), json_encode($knowledges));
+		$this->storeJsonFile($config->getComputedKnowledgeFile(), $knowledges, $config->getCharset());
 		return true;
 	}
 	
-	private function loadJsonFile($filepath) {
+ 	private function loadJsonFile($filepath, $charset='UTF-8') {
 		// Load JSON file
 		$data = @file_get_contents($filepath);
 		if (false === $data) {
@@ -101,6 +101,9 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 			return NULL;
 		}
 		// Clean
+		if ('UTF-8' != $charset) {
+			$data = utf8_encode($data);
+		}
 		$data = cleanJsonString($data);
 
 		// Parse JSON
@@ -113,6 +116,14 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 			return NULL;
 		}
 		return $knowledge;
+	}
+	
+	private function storeJsonFile($filepath, $data, $charset='UTF-8') {
+		$jsonData = json_encode($data);
+		if ('UTF-8' != $charset) {
+			$jsonData = utf8_decode($jsonData);
+		}
+		file_put_contents($filepath, $jsonData);
 	}
 	
 	private function getSynonyms($synonymKey, $synonymList) {

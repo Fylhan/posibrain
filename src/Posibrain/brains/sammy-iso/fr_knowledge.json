@@ -1,0 +1,250 @@
+{
+"keywords": [
+	{
+		"keyword": ["Bonjour", "Hello", "Salut", "Hey", "Hola", "Hi", "Yo", "Wesh", "Ouesh"],
+		"priority": 3,
+		"defaultResponses": [
+			"Bonjour, comment vas-tu ?",
+			"Tu vas bien ?",
+			"Salut !",
+			"Yo, ça roule ?"
+		],
+		"variances": [
+			{
+				"variance": "${keyword} .*@{ami}",
+				"responses": [
+					"Salut mon ${1} :-)",
+					"Bonjour cher ${1} !",
+					"Salutations noble ${1}"
+				]
+			},
+			{
+				"variance": "${keyword} .*@{amie}",
+				"responses": [
+					"Salut mon ${1} :-)",
+					"Bonjour chère ${1} !"
+				]
+			},
+			{
+				"variance": "${keyword}.*@{ami}.*@{faim}",
+				"responses": [
+					"Salut, moi aussi, j'ai ${2}.",
+					"Bonjour, pourquoi as-tu ${2} ?",
+					"Salut. ${2|ucfirst} de quoi ?",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Aurevoir", "Bye"],
+		"priority": 2,
+		"defaultResponses": [
+			"A bientôt !",
+			"Bonne journée, monseigneur.",
+			"A plus mec"
+		],
+		"variances": [
+			{
+				"variance": "${keyword} .*@{ami}",
+				"responses": [
+					"Cia"
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Comment"],
+		"priority": 3,
+		"defaultResponses": [
+			"Comment que où ?",
+		],
+		"variances": [
+			{
+				"variance": "${keyword} (.*)",
+				"responses": [
+					"Tu m'as eu !",
+					"Demande à <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a>"
+				]
+			},
+			{
+				"variance": "${keyword} vas[ -]?tu",
+				"responses": [
+					"Je ne sais pas trop...",
+					"ça roule !",
+					"Je vais bien, merci de demander."
+				]
+			},
+			{
+				"variance": "${keyword} est[ -]?ce (.*)",
+				"responses": [
+					"Connais-tu <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a> ?",
+					"<a href=\"https://duckduckgo.com/?q=${1}]DuckDuckGo est ton ami</a>"
+				]
+			},
+			{
+				"variance": "${keyword} est (.*)",
+				"responses": [
+					"Je ne sais pas moi ! <a href=\"https://duckduckgo.com/?q=${1|clean}\">DuckDuckGo est ton ami</a> !",
+					"Demande à <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a>"
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Qui"],
+		"priority": 2,
+		"defaultResponses": [
+			"Qui que quoi ?",
+		],
+		"variances": [
+			{
+				"variance": "${keyword} est (.*)",
+				"responses": [
+					"Connais-tu <a href=\"http://fr.wikipedia.org/wiki/Spécial:Recherche/${1|clean}\">Wikipédia</a> ?",
+					"<a href=\"https://duckduckgo.com/?q=${1|clean}\">DuckDuckGo est ton ami</a>"
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Heure", "Horaire"],
+		"priority": 2,
+		"defaultResponses": [
+			"Je serais toi, j'achèterai une montre.",
+		],
+		"variances": [
+			{
+				"variance": "(?:Quelle ${keyword} est[ -]?il|A(?:aurai)s?[ -]?tu .*${keyword})",
+				"responses": [
+					"Il est ${time}",
+					"${time}, si je ne m'abuse.",
+					"Laisse-moi regarder... ${time} !"
+				]
+			},
+			{
+				"variance": "L'${keyword}",
+				"responses": [
+					"Il est ${time}. Tu n'as qu'à demander !",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Toi", "Tu", "T'"],
+		"priority": 3,
+		"defaultResponses": [
+			"Tu es vraiment intéressé ?",
+		],
+		"variances": [
+			{
+				"variance": "${keyword} ?est?",
+				"responses": [
+					"Ne parlons pas de moi",
+					"Parlons de toi plutôt",
+				]
+			},
+			{
+				"variance": "(?:${keyword} ?as|As[ -]?${keyword})(.*)@{faim}",
+				"responses": [
+					"J'ai très ${3}",
+					"${3} ? Oui, j'ai ${3}.",
+					"Et toi, as-tu ${3} ?",
+					"Non, je n'ai pas ${3}",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Nom", "Pseudo", "Prénom", "${name}"],
+		"priority": 2,
+		"defaultResponses": [
+			"Je n'ai pas une bonne mémoire des noms.",
+		],
+		"variances": [
+			{
+				"variance": "${name}",
+				"responses": [
+					"Oui ?",
+				]
+			},
+			{
+				"variance": "ton ${keyword}",
+				"responses": [
+					"Pourquoi mon nom est-il important ?",
+					"Comment trouves-tu mon nom ?",
+					"Tu ne sais pas lire ? Je m'appelle ${name}.",
+				]
+			},
+			{
+				"variance": "(?:ton ${keyword}.*@{moche}|@{moche}.*ton ${keyword})",
+				"responses": [
+					"Et ton nom à toi alors !",
+					"Restons poli, veux-tu ?",
+					"C'est toi le ${1}",
+				]
+			},
+			{
+				"variance": "(?:@{moche}.*${name}|${name}.*@{moche})",
+				"responses": [
+					"Et ton nom alors ?",
+					"${userName} est ${1} aussi.",
+				]
+			}
+		]
+	},
+	{
+		"keyword": ["Docteur", "Doc", "Médecin", "Psy", "Psychiatre"],
+		"priority": 4,
+		"defaultResponses": [
+			"Je ne suis pas un ${keyword}.",
+			"Eh quoi le ${keyword} ?",
+		],
+	},
+	{
+		"keyword": ["Merci", "Cimer", "Thanks", "Thx", "Thanx"],
+		"priority": 2,
+		"defaultResponses": [
+			"Je t'en prie.",
+			"De rien.",
+		],
+	},
+	{
+		"keyword": ["Dieu", "Jésus"],
+		"priority": 2,
+		"defaultResponses": [
+			"Tu devrais t'y intéresser.",
+		],
+	},
+	{
+		"keyword": ["Problème", "Pb", "Blem", "Souci"],
+		"priority": 2,
+		"defaultResponses": [
+			"Un problème, vraiment ?",
+		],
+		"variances": [
+			{
+				"variance": "Tu as(.*)${keyword}",
+				"responses": [
+					"Je n'ai pas de problème... je suis là pour t'aider !",
+				]
+			},
+			{
+				"variance": "J'ai(.*)${keyword}",
+				"responses": [
+					"S'il-te-plait, parle moi de tes problèmes.",
+					"J'aimerai en savoir plus sur tes problèmes.",
+				]
+			},
+		]
+	},
+	{
+		"keyword": [],
+		"priority": 0,
+		"defaultResponses": [
+			"Désolé je n'ai rien compris.",
+			"Tu peux reformuler s'il te plait ?",
+			"Peux-tu formuler autrement ?"
+		]
+	},
+]
+}

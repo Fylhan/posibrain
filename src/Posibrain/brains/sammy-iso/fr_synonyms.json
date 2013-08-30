@@ -1,0 +1,24 @@
+{
+"synonyms": [
+	{
+		"key": "bonjour",
+		"synonyms": ["bonjour", "hello", "salut", "hey", "hola", "hi"]
+	},
+	{
+		"key": "ami",
+		"synonyms": ["ami", "camarade", "mec", "pote", "copain"]
+	},
+	{
+		"key": "amie",
+		"synonyms": ["amie", "camarade", "copine"]
+	},
+	{
+		"key": "faim",
+		"synonyms": ["faim", "soif", "froid", "chaud"]
+	},
+	{
+		"key": "moche",
+		"synonyms": ["moche", "pas beau", "laid", "beurk", "caca", "burk"]
+	}
+]
+}

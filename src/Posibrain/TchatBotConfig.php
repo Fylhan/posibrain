@@ -8,7 +8,7 @@ use Monolog\Handler\StreamHandler;
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-07-31
- * @updated 2013-07-31
+ * @updated 2013-08-30
  */
 class TchatBotConfig
 {
@@ -43,6 +43,7 @@ class TchatBotConfig
 		$this->setCharset(isset($params['charset']) ? $params['charset'] : $defaultConfig['charset']);
 
 		$tryNumber = 0;
+		// Find some knwoledge positrons for this bot
 		while (!is_file($this->getKnowledgeFile())) {
 			$tryNumber++;
 			// Try to change ID
@@ -51,6 +52,7 @@ class TchatBotConfig
 					$tryNumber++;
 				}
 				$this->id = $defaultConfig['id'];
+				$this->setCharset($defaultConfig['charset']);
 				self::$logger->addWarning('No such bot: load crazy stupid '.$this->id.' ('.$this->lang.')', array($id, $lang, $params));
 				continue;
 			}
@@ -60,6 +62,7 @@ class TchatBotConfig
 					$tryNumber++;
 				}
 				$this->lang = $defaultConfig['lang'];
+				$this->setCharset($defaultConfig['charset']);
 				self::$logger->addWarning('Still no such bot: load crazy stupid '.$this->id.' ('.$this->lang.')', array($id, $lang, $params));
 				continue;
 			}
@@ -68,12 +71,14 @@ class TchatBotConfig
 				if ($this->brainsFolder == $defaultConfig['brainsFolder']) {
 					$tryNumber++;
 				}
+				$this->setCharset($defaultConfig['charset']);
 				$this->brainsFolder = $defaultConfig['brainsFolder'];
 				continue;
 			}
 			// Arg!
 			else {
 				self::$logger->addError('Definitely no bot: this tchat is going to be very stupid!', array($id, $lang, $params));
+				$this->setCharset($defaultConfig['charset']);
 				break;
 			}
 		}
@@ -128,9 +133,11 @@ class TchatBotConfig
 	}
 	public function setCharset($charset) {
 		$this->charset = $charset;
-		if ('UTF-8' == $this->charset) {
-			mb_internal_encoding('UTF-8');
-		}
+		// Manage everything internally as UTF-8
+		// Bot files, and bot output can have a different charset
+		// Conversion is done when files are loaded
+		// and when bot reply is returned
+		mb_internal_encoding('UTF-8');
 	}
 }
 

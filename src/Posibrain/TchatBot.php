@@ -12,7 +12,7 @@ include_once('tools.php');
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-07-11
- * @updated 2013-08-01
+ * @updated 2013-08-30
  */
 class TchatBot implements ITchatBot
 {
@@ -68,6 +68,7 @@ class TchatBot implements ITchatBot
 	public function generateAnswer($userName, $userMessage, $dateTime) {
 		// -- Load knowledge file
 		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
+			// Robustness, because an empty crazy knowledge should at least be available
 			return array('Qzhge', 'Rahh, someone eats my brain!');
 		}
 		$identity = $this->knowledges->identity;

@@ -30,6 +30,8 @@ $logger->addWarning("Launch test");
 $botSammy = new TchatBot('', '', array('loggerHandler' => $loggerHandler));
 $botDaneel1 = new TchatBot('daneel', 'en', array('loggerHandler' => $loggerHandler));
 $botDaneel2 = new TchatBot('daneel', 'fr', array('loggerHandler' => $loggerHandler));
+$botSammyIso = new TchatBot('sammy-iso', 'fr', array('charset' => 'iso-8859-1', 'loggerHandler' => $loggerHandler));
+displayDiscussion($botSammyIso, 'Bnmaster', 'Je veux un médecin !', time());
 displayDiscussion($botDaneel1, 'Bnmaster', 'Quel est ton nom ?', time());
 displayDiscussion($botDaneel2, 'Bnmaster', 'Quel est ton nom ?', time());
 displayDiscussion($botDaneel2, 'Bnmaster', 'Ton nom est plutôt moche, non ?', time());
