@@ -8,7 +8,7 @@ use Monolog\Handler\StreamHandler;
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @created 2013-07-31
- * @updated 2013-08-30
+ * @updated 2013-09-06
  */
 class TchatBotConfig
 {

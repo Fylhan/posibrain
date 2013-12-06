@@ -100,10 +100,11 @@ getSynonyms($synonym, $synonyms->synonyms)).')', $keyword->variances[$i]->varian
 			self::$logger->addWarning('Can\'t load JSON file "'.$filepath.'"');
 			return NULL;
 		}
-		// Clean
-		if ('UTF-8' != $charset) {
+		// Encode to UTF-8
+		if ('UTF-8' != mb_detect_encoding($data, 'UTF-8', true)) {
 			$data = utf8_encode($data);
 		}
+		// Clean
 		$data = cleanJsonString($data);
 
 		// Parse JSON

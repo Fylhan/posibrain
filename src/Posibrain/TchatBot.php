@@ -93,6 +93,8 @@ class TchatBot implements ITchatBot
 		$varianceItem = $this->findBestVariance($userName, $userMessage, $keywordItem);
 		$response = $this->getResponse($userName, $userMessage, $varianceItem);
 		
+		if ('UTF-8' != $this->config->getCharset()) {
+		}
 		return array($identity->name, $response);
 	}
 	
