@@ -1,7 +1,5 @@
 <?php
 
-namespace Posibrain;
-
 define('MODE', 'dev');
 
 function parserI($int) {

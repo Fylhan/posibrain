@@ -2,7 +2,7 @@ Posibrain
 ========
 
 A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?
-Nothing very intelligent at the moment, a set of predefined sentances lead to an other set of predefined answers. But still, synonyms can be defined, data from the sentance can be used in the answer, and of course the same answer won't be use everytime.
+Nothing very intelligent at the moment, a set of predefined sentences lead to an other set of predefined answers. But still, synonyms can be defined, data from the sentence can be used in the answer, and of course the same answer won't be use every time.
 
 *Posibrain* name is inspired by Asimov's positronic robots. Yes, R. Sammy is currently stupid ;-)
 
@@ -44,11 +44,11 @@ Or even using command line:
 
 How to test?
 -----------
-Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/test/test.php) in a browser. A list of sentances, and their bot answer, will be displayed.
+Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/test/test.php) in a browser. A list of sentences, and their bot answer, will be displayed.
 
 ![Posibrain discussion example](https://raw.github.com/Fylhan/posibrain/master/doc/tchatbot-example.png)
 
-An interactive tchat implementation will come. At the moment, this tchatbot is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speack with him in french by beginning your sentances by "@Hari".
+An interactive tchat implementation will come. At the moment, this tchatbot is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
 
 
 How to use and modify?
@@ -62,25 +62,26 @@ A lot of things are in progress! I have created a first version of the bot algor
 
 - [████100%] Add Composer support
 - [████98%] Provide a way to select between several brains. [miss unit tests]
-- [████98% ] Manage several langages (only fr translation is done currently). [miss unit tests]
+- [████98% ] Manage several languages (only fr translation is done currently). [miss unit tests]
 - [██▒▒50% ] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet. 
-- [███▒75%] Check and improve folder structure/ Now: src/Posibrain
+- [███▒75%] Check and improve folder structure. Currently: src/Posibrain
 - [██▒▒50%] Add command line support (add options in "submit question" command, add command to list available bots)
 - [▒▒▒▒ 0% ] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin may be called a "Positron".
 - [▒▒▒▒ 0% ] Remove lib dependencies. The idea is to provide a basic implementation that can be used if dependencies are not downloaded. Dependencies will become optional (and nice to have), and TchatBot will be light weight(er).
 - [▒▒▒▒ 0% ] Create an interactive tchat example
 - [████100% ] Find a proper name -> Posibrain. Inspired by the "Robots" books of Isaac Asimov and his positronic robots.
+- [▒▒▒▒ 0% ] Add unit test engine
 - [▒▒▒▒ 0% ] Add unit tests
 - [▒▒▒▒ 0% ] Add proper documentation
 - [█▒▒▒10% ] Update the first brain's knowledge
-- [█▒▒▒10% ] Increase knowledge syntax possibilities (use Twig syntax instead if possible, add support for ${name, conceptorName, lang, birthday, userName} everywhere in responses or questions.
-- [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more inteligent
+- [█▒▒▒10% ] Increase knowledge syntax possibilities (use Twig syntax instead if possible, add support for ${name, conceptorName, lang, birthday, userName} everywhere in responses or questions).
+- [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more intelligent
 - [▒▒▒▒ 0% ] Add more and more intelligence!
 
 
-Licencing
+Licensing
 --------
-This piece of code is a free software under [LGPL v2.1](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information.
+This piece of code is a free software under [LGPL v2.1](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information. If this license is an issue for you, don't hesitate to contact me, I am very open on this :D
 
 To summarize:
 * Required
@@ -90,7 +91,7 @@ To summarize:
   * Commercial Use
   * Modification
   * Distribution
-  * Sublicensing
+  * Sub-licensing
   * Patent Grant
-* Forbidden 	
+* Forbidden
   * Hold Liable

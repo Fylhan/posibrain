@@ -1,6 +1,7 @@
 <?php
 
 require '../vendor/autoload.php';
+require '../src/Posibrain/tools.php';
 
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;
@@ -11,9 +12,9 @@ use Posibrain\TchatBot;
 // Prepare to display discussion
 header("Content-Type: text/html; charset=UTF-8");
 function displayDiscussion($bot, $userName, $userMessage, $datetime) {
-	list($botName, $botMessage) = $bot->generateAnswer($userName, $userMessage, $datetime);
+	$answer = $bot->generateAnswer($userMessage, $userName, $datetime);
 	echo $userName.' : '.$userMessage.'<br />';
-	echo $botName.' : '.$botMessage.'<br /><br />';
+	echo @$answer[0].' : '.@$answer[1].'<br /><br />';
 }
 
 // Config logger for debug

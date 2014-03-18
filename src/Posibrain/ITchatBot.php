@@ -9,9 +9,23 @@ namespace Posibrain;
  */
 interface ITchatBot
 {
-	public function isTriggered($userMessage);
+	/**
+	 * To know if the bot should be triggered
+	 * @param string $userName Name of the user who speak to the bot
+	 * @param string $userMessage Message of the user
+	 * @param long $dateTime Date when the message had been posted
+	 * @return boolean
+	 */
+	public function isTriggered($userMessage, $userName='', $dateTime='');
 
-	public function generateAnswer($userName, $userMessage, $dateTime);
+	/**
+	 * Generate to the user sentence
+	 * @param string $userName Name of the user who speak to the bot
+	 * @param string $userMessage Message of the user
+	 * @param long $dateTime Date when the message had been posted
+	 * @return array($botName, $botMessage)
+	 */
+	public function generateAnswer($userMessage, $userName, $dateTime='');
 }
 
 
