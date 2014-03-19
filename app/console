@@ -32,7 +32,7 @@ $console
 		$userMessage = $input->getArgument('message');
 		
 		$bot = new TchatBot();
-		list($botName, $botMessage) = $bot->generateAnswer($userName, $userMessage, time());
+		list($botName, $botMessage) = $bot->generateAnswer($userMessage, $userName, time());
 
 		$output->writeln(sprintf('%s: %s', utf8_decode($botName), utf8_decode($botMessage)));
 	})

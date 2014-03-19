@@ -13,7 +13,7 @@ Installation & Usage
 Use Composer to download and install this library. To do so, create a folder and a file composer.json in it. Add this to this file:
 
     "require": {
-        "fylhan/posibrain": "0.*.*",
+        "fylhan/posibrain": "dev-master",
     }
     
 And install it using the following command:

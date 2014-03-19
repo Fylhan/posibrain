@@ -1,9 +1,14 @@
 <?php
-
 namespace Posibrain\Positron\Instinct;
 
+/**
+ *
+ * @author Fylhan (http://fylhan.la-bnbox.fr)
+ * @license LGPL-2.1+
+ */
+interface IBrainManager
+{
 
-interface IBrainManager {
 	/**
 	 * Load this bot's brain
 	 * Return the Knowledge array

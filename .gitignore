@@ -1,5 +1,8 @@
+.project
+.buildpath
+.settings*
+*_computed.json
+*.lock
 bnbox/
 vendor/
 logs/
-*_computed.json
-*.lock

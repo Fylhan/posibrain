@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @author Fylhan (http://fylhan.la-bnbox.fr)
+ * @license LGPL-2.1+
+ */
 require '../vendor/autoload.php';
 require '../src/Posibrain/tools.php';
 
@@ -8,30 +11,40 @@ use Monolog\Handler\RotatingFileHandler;
 
 use Posibrain\TchatBot;
 
-
 // Prepare to display discussion
 header("Content-Type: text/html; charset=UTF-8");
-function displayDiscussion($bot, $userName, $userMessage, $datetime) {
+
+function displayDiscussion($bot, $userName, $userMessage, $datetime)
+{
 	$answer = $bot->generateAnswer($userMessage, $userName, $datetime);
-	echo $userName.' : '.$userMessage.'<br />';
-	echo @$answer[0].' : '.@$answer[1].'<br /><br />';
+	echo $userName . ' : ' . $userMessage . '<br />';
+	echo @$answer[0] . ' : ' . @$answer[1] . '<br /><br />';
 }
 
 // Config logger for debug
 $logger = new Logger('TchatBotTester');
-if (!is_dir(__DIR__.'/../logs/')) {
-	mkdir(__DIR__.'/../logs/');
-	chmod(__DIR__.'/../logs/', '755');
+if (! is_dir(__DIR__ . '/../logs/')) {
+	mkdir(__DIR__ . '/../logs/');
+	chmod(__DIR__ . '/../logs/', '755');
 }
-$loggerHandler = new RotatingFileHandler(__DIR__.'/../logs/log.log', 2, Logger::DEBUG);
+$loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/log.log', 2, Logger::DEBUG);
 $logger->pushHandler($loggerHandler);
 $logger->addWarning("Launch test");
 
 // Launch Test
-$botSammy = new TchatBot('', '', array('loggerHandler' => $loggerHandler));
-$botDaneel1 = new TchatBot('daneel', 'en', array('loggerHandler' => $loggerHandler));
-$botDaneel2 = new TchatBot('daneel', 'fr', array('loggerHandler' => $loggerHandler));
-$botSammyIso = new TchatBot('sammy-iso', 'fr', array('charset' => 'iso-8859-1', 'loggerHandler' => $loggerHandler));
+$botSammy = new TchatBot('', '', array(
+	'loggerHandler' => $loggerHandler
+));
+$botDaneel1 = new TchatBot('daneel', 'en', array(
+	'loggerHandler' => $loggerHandler
+));
+$botDaneel2 = new TchatBot('daneel', 'fr', array(
+	'loggerHandler' => $loggerHandler
+));
+$botSammyIso = new TchatBot('sammy-iso', 'fr', array(
+	'charset' => 'iso-8859-1',
+	'loggerHandler' => $loggerHandler
+));
 displayDiscussion($botSammyIso, 'Bnmaster', 'Je veux un médecin !', time());
 displayDiscussion($botDaneel1, 'Bnmaster', 'Quel est ton nom ?', time());
 displayDiscussion($botDaneel2, 'Bnmaster', 'Quel est ton nom ?', time());
