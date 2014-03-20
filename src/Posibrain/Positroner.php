@@ -65,24 +65,57 @@ class Positroner implements IPositroner
 	public function updatePositron($id, $state)
 	{}
 
-	public function callPre($functionName, $actionArguments = array())
+	public function isTriggered(TchatMessage $request, $currentValue = true)
 	{
 		if (empty($this->positrons)) {
-			return $actionArguments;
+			return $currentValue;
 		}
 		foreach ($this->positrons as $positron) {
-			$request = $positron->$functionName($actionArguments);
+			$currentValue = $positron->isTriggered($request, $currentValue);
 		}
-		return $request;
+		return $currentValue;
 	}
 
-	public function callPost($functionName, $actionArguments = array(), $currentAnswser = array())
+	public function loadMemory(AnalysedRequest $request, $currentMemory = null)
 	{
 		if (empty($this->positrons)) {
-			return $currentAnswser;
+			return $currentMemory;
 		}
 		foreach ($this->positrons as $positron) {
-			$currentAnswser = $positron->$functionName($actionArguments, $currentAnswser);
+			$currentMemory = $positron->loadMemory($request, $currentMemory);
+		}
+		return $currentMemory;
+	}
+
+	public function analyseRequest(TchatMessage $request, AnalysedRequest $currentAnalysedRequest = null)
+	{
+		if (empty($this->positrons)) {
+			return $currentAnalysedRequest;
+		}
+		foreach ($this->positrons as $positron) {
+			$currentAnalysedRequest = $positron->analyseRequest($request, $currentAnalysedRequest);
+		}
+		return $currentAnalysedRequest;
+	}
+
+	public function generateSymbolicAnswer(AnalysedRequest $request, $memory = null, TchatMessage $currentAnswer = null)
+	{
+		if (empty($this->positrons)) {
+			return $currentAnswer;
+		}
+		foreach ($this->positrons as $positron) {
+			$currentAnswser = $positron->generateSymbolicAnswer($request, $memory, $currentAnswer);
+		}
+		return $currentAnswser;
+	}
+
+	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
+	{
+		if (empty($this->positrons)) {
+			return $currentAnswer;
+		}
+		foreach ($this->positrons as $positron) {
+			$currentAnswser = $positron->beautifyAnswer($request, $memory, $answer, $currentAnswer);
 		}
 		return $currentAnswser;
 	}

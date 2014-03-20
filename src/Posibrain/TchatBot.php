@@ -37,48 +37,21 @@ class TchatBot implements ITchatBot
 
 	public function isTriggered($userMessage, $userName = '', $dateTime = 0)
 	{
-		// Check params
-		if ($dateTime instanceof \DateTime) {
-			$dateTime = $dateTime->getTimestamp();
-		}
-		elseif (0 == $dateTime) {
-			$dateTime = time();
-		}
-		elseif (is_string($dateTime)) {
-			$dateTime = strtotime($dateTime);
-		}
-		// Pre
-		$request = $this->brain->callPre('preIsTriggered', array(
-			$userMessage,
-			$userName,
-			$dateTime
-		));
-		// Post
-		$triggered = $this->brain->callPost('postIsTriggered', $request);
-		return $triggered;
+		$request = new TchatMessage($userMessage, $userName, $dateTime);
+		return $this->brain->isTriggered($request);
 	}
 
 	public function generateAnswer($userMessage, $userName = '', $dateTime = 0)
 	{
-		// Check params
-		if ($dateTime instanceof \DateTime) {
-			$dateTime = $dateTime->getTimestamp();
+		$request = new TchatMessage($userMessage, $userName, $dateTime);
+		$request = $this->brain->analyseRequest($request);
+		$memory = $this->brain->loadMemory($request);
+		$answer = $this->brain->generateSymbolicAnswer($request);
+		$answer = $this->brain->beautifyAnswer($request, $memory, $answer);
+		if (null == $answer) {
+			$answer = new TchatMessage('Ssqdijoezf ? Jkfd.', 'QTzbn');
 		}
-		elseif (0 == $dateTime) {
-			$dateTime = time();
-		}
-		elseif (is_string($dateTime)) {
-			$dateTime = strtotime($dateTime);
-		}
-		// Pre
-		$request = $this->brain->callPre('preGenerateAnswer', array(
-			$userMessage,
-			$userName,
-			$dateTime
-		));
-		// Post
-		$answer = $this->brain->callPost('postGenerateAnswer', $request);
-		return $answer;
+		return $answer->toArray();
 	}
 
 	public function getConfig()

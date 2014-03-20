@@ -2,15 +2,17 @@
 namespace Posibrain\Positron\Instinct;
 
 use Monolog\Logger;
-use Posibrain\Positron\Posineutron;
+use Posibrain\Positron\Positron;
 use Posibrain\TchatBotConfig;
+use Posibrain\AnalysedRequest;
+use Posibrain\TchatMessage;
 
 /**
  *
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @license LGPL-2.1+
  */
-class InstinctPositron extends Posineutron
+class InstinctPositron extends Positron
 {
 
 	private static $logger = NULL;
@@ -39,9 +41,9 @@ class InstinctPositron extends Posineutron
 		mt_srand((double) microtime() * 1000000);
 	}
 
-	public function postIsTriggered($request = array(), $currentAnswer = array())
+	public function isTriggered(TchatMessage $request, $currentAnswer = true)
 	{
-		$content = $request[0];
+		$content = $request->getMessage();
 		$triggered = (NULL != $content);
 		$identity = $this->knowledges->identity;
 		// Triggered by specific rules
@@ -55,16 +57,16 @@ class InstinctPositron extends Posineutron
 				$triggered &= preg_match('!(' . implode('|', $identity->trigger->sentance) . ')!i', $content);
 			}
 		}
-		return array(
-			$triggered
-		);
+		self::$logger->addInfo("Bot is triggered? ".$triggered);
+		return $triggered;
 	}
 
-	public function postGenerateAnswer($request = array(), $currentAnswer = array())
+	public function generateSymbolicAnswer(AnalysedRequest $request, TchatMessage $currentAnswer = null)
 	{
-		$userMessage = $request[0];
-		$userName = $request[1];
-		$dateTime = $request[1];
+		$userMessage = $request->getMessage();
+		$userName = $request->getName();
+		$dateTime = $request->getDate();
+		self::$logger->addInfo("generateSymbolicAnswer for request: ".$request);
 		
 		// -- Load knowledge file
 		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
@@ -79,7 +81,7 @@ class InstinctPositron extends Posineutron
 		$knowledge = $this->knowledges->keywords;
 		
 		// Don't trigger this bot
-		if (! $this->postIsTriggered($userMessage)) {
+		if (! $this->isTriggered($userMessage)) {
 			return NULL;
 		}
 		
@@ -96,11 +98,18 @@ class InstinctPositron extends Posineutron
 		$varianceItem = $this->findBestVariance($userName, $userMessage, $keywordItem);
 		$response = $this->getResponse($userName, $userMessage, $varianceItem);
 		
-		if ('UTF-8' != $this->config->getCharset()) {}
-		return array(
-			$identity->name,
-			$response
-		);
+// 		if ('UTF-8' != $this->config->getCharset()) {}
+		$currentAnswer = new TchatMessage($response, $identity->name, new \DateTime());
+		return $currentAnswer;
+	}
+	
+	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer=null)
+	{
+		if (null == $currentAnswer) {
+			$currentAnswer = $answer;
+		}
+		$currentAnswer->setMessage(preg_replace('!(bonjour)!i', '<strong>$1</strong>', ucfirst($currentAnswer->getMessage())));
+		return $currentAnswer;
 	}
 
 	public function findBestPriorityKeyword($userName, $message)

@@ -61,15 +61,15 @@ Work in progress
 A lot of things are in progress! I have created a first version of the bot algorithm, with a quick knowledge database. I am currently working on the package improvement (command line, API usability, brain selection, languages, plugin management). This is not the main goal of this project, but this is important to use it, and (eventually) contribute to it. Then... we will be able to increase this tchatbot intelligence :D
 
 - [████100%] Add Composer support
-- [████98%] Provide a way to select between several brains. [miss unit tests]
-- [████98% ] Manage several languages (only fr translation is done currently). [miss unit tests]
-- [██▒▒50% ] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet. 
-- [███▒75%] Check and improve folder structure. Currently: src/Posibrain
-- [██▒▒50%] Add command line support (add options in "submit question" command, add command to list available bots)
-- [▒▒▒▒ 0% ] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin may be called a "Positron".
+- [████ 98%] Provide a way to select between several brains. [miss unit tests]
+- [████ 98%] Manage several languages (only fr translation is done currently). [miss unit tests]
+- [██▒▒ 50%] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet. 
+- [███▒ 75%] Check and improve folder structure. Currently: src/Posibrain
+- [██▒▒  50%] Add command line support (add options in "submit question" command, add command to list available bots)
+- [█▒▒▒ 25%] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin is called a "Positron" and must be a class extending Posibrain\Positron\Positron and with a class name finished by "Positron".
 - [▒▒▒▒ 0% ] Remove lib dependencies. The idea is to provide a basic implementation that can be used if dependencies are not downloaded. Dependencies will become optional (and nice to have), and TchatBot will be light weight(er).
 - [▒▒▒▒ 0% ] Create an interactive tchat example
-- [████100% ] Find a proper name -> Posibrain. Inspired by the "Robots" books of Isaac Asimov and his positronic robots.
+- [████100%] Find a proper name -> Posibrain. Inspired by the "Robots" books of Isaac Asimov and his positronic robots.
 - [▒▒▒▒ 0% ] Add unit test engine
 - [▒▒▒▒ 0% ] Add unit tests
 - [▒▒▒▒ 0% ] Add proper documentation
@@ -81,7 +81,7 @@ A lot of things are in progress! I have created a first version of the bot algor
 
 Licensing
 --------
-This piece of code is a free software under [LGPL v2.1](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information. If this license is an issue for you, don't hesitate to contact me, I am very open on this :D
+This piece of code is a free software under [LGPL v2.1+](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information. If this license is an issue for you, don't hesitate to contact me, I am very open on this :D
 
 To summarize:
 * Required

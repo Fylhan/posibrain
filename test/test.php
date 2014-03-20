@@ -18,7 +18,7 @@ function displayDiscussion($bot, $userName, $userMessage, $datetime)
 {
 	$answer = $bot->generateAnswer($userMessage, $userName, $datetime);
 	echo $userName . ' : ' . $userMessage . '<br />';
-	echo @$answer[0] . ' : ' . @$answer[1] . '<br /><br />';
+	echo @$answer[1] . ' : ' . @$answer[0] . '<br /><br />';
 }
 
 // Config logger for debug
@@ -35,22 +35,22 @@ $logger->addWarning("Launch test");
 $botSammy = new TchatBot('', '', array(
 	'loggerHandler' => $loggerHandler
 ));
-$botDaneel1 = new TchatBot('daneel', 'en', array(
-	'loggerHandler' => $loggerHandler
-));
-$botDaneel2 = new TchatBot('daneel', 'fr', array(
-	'loggerHandler' => $loggerHandler
-));
-$botSammyIso = new TchatBot('sammy-iso', 'fr', array(
-	'charset' => 'iso-8859-1',
-	'loggerHandler' => $loggerHandler
-));
-displayDiscussion($botSammyIso, 'Bnmaster', 'Je veux un médecin !', time());
-displayDiscussion($botDaneel1, 'Bnmaster', 'Quel est ton nom ?', time());
-displayDiscussion($botDaneel2, 'Bnmaster', 'Quel est ton nom ?', time());
-displayDiscussion($botDaneel2, 'Bnmaster', 'Ton nom est plutôt moche, non ?', time());
-displayDiscussion($botDaneel2, 'Bnmaster', 'RSammy, c\'est plutôt moche, non ?', time());
-displayDiscussion($botDaneel2, 'Bnmaster', 'Bonjour Daneel', time());
+// $botDaneel1 = new TchatBot('daneel', 'en', array(
+// 	'loggerHandler' => $loggerHandler
+// ));
+// $botDaneel2 = new TchatBot('daneel', 'fr', array(
+// 	'loggerHandler' => $loggerHandler
+// ));
+// $botSammyIso = new TchatBot('sammy-iso', 'fr', array(
+// 	'charset' => 'iso-8859-1',
+// 	'loggerHandler' => $loggerHandler
+// ));
+// displayDiscussion($botSammyIso, 'Bnmaster', 'Je veux un médecin !', time());
+// displayDiscussion($botDaneel1, 'Bnmaster', 'Quel est ton nom ?', time());
+// displayDiscussion($botDaneel2, 'Bnmaster', 'Quel est ton nom ?', time());
+// displayDiscussion($botDaneel2, 'Bnmaster', 'Ton nom est plutôt moche, non ?', time());
+// displayDiscussion($botDaneel2, 'Bnmaster', 'RSammy, c\'est plutôt moche, non ?', time());
+// displayDiscussion($botDaneel2, 'Bnmaster', 'Bonjour Daneel', time());
 displayDiscussion($botSammy, 'Bnmaster', 'R. Sammy c\'est super laid !', time());
 displayDiscussion($botSammy, 'Bnmaster', 'Bonjour R. Sammy', time());
 displayDiscussion($botSammy, 'Bnmaster', 'Bonjour Sammy', time());

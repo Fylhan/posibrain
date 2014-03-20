@@ -22,7 +22,13 @@ interface IPositroner
 
 	public function updatePositron($id, $state);
 
-	public function callPre($functionName, $request = array());
+	public function isTriggered(TchatMessage $request, $currentValue = true);
 
-	public function callPost($functionName, $request = array(), $currentResponse = array());
+	public function analyseRequest(TchatMessage $request, AnalysedRequest $currentAnalysedRequest = null);
+
+	public function loadMemory(AnalysedRequest $request, $currentMemory = null);
+
+	public function generateSymbolicAnswer(AnalysedRequest $request, $memory = null, TchatMessage $currentAnswer = null);
+
+	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null);
 }
