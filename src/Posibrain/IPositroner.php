@@ -14,7 +14,7 @@ interface IPositroner
 	 * Return the Knowledge array
 	 * Or NULL if no brain is retrieved
 	 */
-	public function loadPositrons($config);
+	public function loadPositrons($config, $params=array());
 
 	public function getPostitrons();
 

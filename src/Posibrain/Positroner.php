@@ -18,7 +18,7 @@ class Positroner implements IPositroner
 
 	public $positrons;
 
-	public function __construct($config)
+	public function __construct($config, $params=array())
 	{
 		// Logger
 		if (NULL == self::$logger) {
@@ -28,10 +28,10 @@ class Positroner implements IPositroner
 			}
 		}
 		
-		$this->loadPositrons($config);
+		$this->loadPositrons($config, $params);
 	}
 
-	public function loadPositrons($config)
+	public function loadPositrons($config, $params=array())
 	{
 		$files = glob(dirname(__FILE__) . '/Positron/*/*Positron.php');
 		if (empty($files))
@@ -41,7 +41,7 @@ class Positroner implements IPositroner
 			require_once ($file);
 			$className = preg_replace('!^.*(Posibrain/Positron/.*/.*Positron).*$!ui', '$1', $file);
 			$className = '\\' . str_replace('/', '\\', $className);
-			$positron = new $className($config);
+			$positron = new $className($config, $params);
 			$this->positrons[] = $positron;
 		}
 		return $this->positrons;

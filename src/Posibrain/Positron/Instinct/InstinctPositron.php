@@ -57,7 +57,6 @@ class InstinctPositron extends Positron
 				$triggered &= preg_match('!(' . implode('|', $identity->trigger->sentance) . ')!i', $content);
 			}
 		}
-		self::$logger->addInfo("Bot is triggered? ".$triggered);
 		return $triggered;
 	}
 
@@ -66,14 +65,13 @@ class InstinctPositron extends Positron
 		$userMessage = $request->getMessage();
 		$userName = $request->getName();
 		$dateTime = $request->getDate();
-		self::$logger->addInfo("generateSymbolicAnswer for request: ".$request);
-		
+
 		// -- Load knowledge file
 		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
 			// Robustness, because an empty crazy knowledge should at least be available
 			return array(
 				'Qzhge',
-				'Rahh, someone eats my brain!'
+				'Rahh, someone ate my brain!'
 			);
 		}
 		$identity = $this->knowledges->identity;
@@ -81,8 +79,8 @@ class InstinctPositron extends Positron
 		$knowledge = $this->knowledges->keywords;
 		
 		// Don't trigger this bot
-		if (! $this->isTriggered($userMessage)) {
-			return NULL;
+		if (! $this->isTriggered($request)) {
+			return null;
 		}
 		
 		// -- Generate reply
@@ -96,10 +94,11 @@ class InstinctPositron extends Positron
 		
 		// - Best variance for this keyword
 		$varianceItem = $this->findBestVariance($userName, $userMessage, $keywordItem);
+		self::$logger->addInfo($userName);
 		$response = $this->getResponse($userName, $userMessage, $varianceItem);
 		
 // 		if ('UTF-8' != $this->config->getCharset()) {}
-		$currentAnswer = new TchatMessage($response, $identity->name, new \DateTime());
+		$currentAnswer = new TchatMessage($response, $identity->name);
 		return $currentAnswer;
 	}
 	

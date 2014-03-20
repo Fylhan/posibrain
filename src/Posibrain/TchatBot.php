@@ -32,7 +32,7 @@ class TchatBot implements ITchatBot
 		$this->config = new TchatBotConfig($id, $lang, $params);
 		
 		// Brain Manager
-		$this->brain = new Positroner($this->config);
+		$this->brain = new Positroner($this->config, $params);
 	}
 
 	public function isTriggered($userMessage, $userName = '', $dateTime = 0)

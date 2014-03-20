@@ -18,7 +18,7 @@ class AnalysedRequest extends TchatMessage
 	{
 		parent::__construct($message, $name = '', $date = 0);
 		if (is_array($message)) {
-			$this->rawRequest = $message['rawRequest'];
+			$this->rawRequest = $message[3];
 		}
 		if ($message instanceof TchatMessage) {
 			$this->message = $message->getMessage();

@@ -9,18 +9,18 @@ namespace Posibrain;
 class TchatMessage
 {
 
-	private $name;
+	protected $name;
 
-	private $message;
+	protected $message;
 
-	private $date;
+	protected $date;
 
 	public function __construct($message, $name = '', $date = 0)
 	{
 		if (is_array($message)) {
-			$this->message = $message['message'];
-			$this->name = $message['name'];
-			$this->setDate($message['date']);
+			$this->message = $message[0];
+			$this->name = $message[1];
+			$this->setDate($message[2]);
 		}
 		else {
 			$this->message = $message;
