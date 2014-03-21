@@ -108,6 +108,17 @@ class Positroner implements IPositroner
 		}
 		return $currentAnswser;
 	}
+	
+	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
+	{
+		if (empty($this->positrons)) {
+			return $currentAnswer;
+		}
+		foreach ($this->positrons as $positron) {
+			$currentAnswser = $positron->provideMeaning($request, $memory, $answer, $currentAnswer);
+		}
+		return $currentAnswser;
+	}
 
 	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{

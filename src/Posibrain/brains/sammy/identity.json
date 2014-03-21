@@ -1,8 +1,10 @@
 {
 "id": "sammy",
 "name": "R. Sammy",
+"pseudo": "Sammy",
 "conceptorName": "Fylhan",
 "birthday": "2013-07-11",
+"timezone": "Europe/Paris",
 /*"trigger": {
 	"called": ["Sammy", "R. Sammy"],
 }*/

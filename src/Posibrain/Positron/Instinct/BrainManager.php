@@ -64,6 +64,7 @@ class BrainManager implements IBrainManager
 		foreach ($knowledge->keywords as $k => $keyword) {
 			// Pre-compute keyword
 			$keyword->keyword = preg_replace('!\$\{name\}!U', $identity->name, $keyword->keyword);
+			$keyword->keyword = preg_replace('!\$\{pseudo\}!U', $identity->pseudo, $keyword->keyword);
 			$keyword->keyword = preg_replace('!\$\{conceptorName\}!U', $identity->conceptorName, $keyword->keyword);
 			// Pre-compute synonyms
 			if (! empty($keyword->variances)) {
@@ -73,6 +74,7 @@ class BrainManager implements IBrainManager
 				for ($i = 0; $i < $size; $i ++) {
 					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{keyword\}!U', '(' . implode('|', $keywordSynonyms) . ')', $variances[$i]->variance);
 					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{name\}!U', $identity->name, $variances[$i]->varianceRegexable);
+					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{pseudo\}!U', $identity->pseudo, $variances[$i]->varianceRegexable);
 					$keyword->variances[$i]->varianceRegexable = preg_replace('!\$\{conceptorName\}!U', $identity->conceptorName, $variances[$i]->varianceRegexable);
 					preg_match_all('!@\{([^\}]+)\}!U', $keyword->variances[$i]->varianceRegexable, $matchingSynonyms);
 					if (NULL != $matchingSynonyms && ! empty($matchingSynonyms) && ! empty($matchingSynonyms[1])) {

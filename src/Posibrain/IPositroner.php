@@ -28,7 +28,9 @@ interface IPositroner
 
 	public function loadMemory(AnalysedRequest $request, $currentMemory = null);
 
-	public function generateSymbolicAnswer(AnalysedRequest $request, $memory = null, TchatMessage $currentAnswer = null);
+	public function generateSymbolicAnswer(AnalysedRequest $request, $memory, TchatMessage $currentAnswer = null);
 
+	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null);
+	
 	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null);
 }

@@ -46,7 +46,8 @@ class TchatBot implements ITchatBot
 		$request = new TchatMessage($userMessage, $userName, $dateTime);
 		$request = $this->brain->analyseRequest($request);
 		$memory = $this->brain->loadMemory($request);
-		$answer = $this->brain->generateSymbolicAnswer($request);
+		$answer = $this->brain->generateSymbolicAnswer($request, $memory);
+		$answer = $this->brain->provideMeaning($request, $memory, $answer);
 		$answer = $this->brain->beautifyAnswer($request, $memory, $answer);
 		if (null == $answer) {
 			$answer = new TchatMessage('Ssqdijoezf ? Jkfd.', 'QTzbn');

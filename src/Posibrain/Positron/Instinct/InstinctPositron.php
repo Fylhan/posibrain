@@ -22,6 +22,8 @@ class InstinctPositron extends Positron
 	private $brainManager;
 
 	private $knowledges;
+	
+	private $matching;
 
 	public function __construct($config, $params = array())
 	{
@@ -94,11 +96,48 @@ class InstinctPositron extends Positron
 		
 		// - Best variance for this keyword
 		$varianceItem = $this->findBestVariance($userName, $userMessage, $keywordItem);
-		self::$logger->addInfo($userName);
-		$response = $this->getResponse($userName, $userMessage, $varianceItem);
+		$this->matching = $varianceItem;
+		$response = $this->pickResponse($userName, $userMessage, $varianceItem);
 		
 // 		if ('UTF-8' != $this->config->getCharset()) {}
 		$currentAnswer = new TchatMessage($response, $identity->name);
+		return $currentAnswer;
+	}
+	
+	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer=null)
+	{
+		if (null == $currentAnswer) {
+			$currentAnswer = $answer;
+		}
+		$message = $currentAnswer->getMessage();
+		// Post traitment
+		if (strstr($message, '${time}')) {
+			$nowDate = new \DateTime(null, new \DateTimeZone(!isset($this->knowledges->identity->timezone) ? 'Europe/Paris' : $this->knowledges->identity->timezone));
+			$message = preg_replace('!\$\{time\}!i', $nowDate->format('H\hi'), $message);
+		}
+		if (strstr($message, '${name}')) {
+			$message = preg_replace('!\$\{name\}!i', $this->knowledges->identity->name, $message);
+		}
+		if (strstr($message, '${conceptorName}')) {
+			$message = preg_replace('!\$\{conceptorName\}!i', $this->knowledges->identity->conceptorName, $message);
+		}
+		if (strstr($message, '${userName}')) {
+			$message = preg_replace('!\$\{userName\}!i', $request->getName(), $message);
+		}
+		if (! empty($this->matching->matchingData) && count($this->matching->matchingData) > 0) {
+			foreach ($this->matching->matchingData as $i => $data) {
+				$data = mb_strtolower($data[0]);
+				$message = preg_replace('!\$\{' . $i . '\}!i', $data, $message);
+				$message = preg_replace('!\$\{' . $i . '\|clean\}!i', parserUrl($data), $message);
+				$message = preg_replace('!\$\{' . $i . '\|ucfirst\}!i', ucfirst($data), $message);
+			}
+		}
+		if (! empty($this->matching->matchingKeyword) && count($this->matching->matchingKeyword) > 0) {
+			$data = mb_strtolower($this->matching->matchingKeyword[0]);
+			$message = preg_replace('!\$\{keyword\}!i', $data, $message);
+		}
+		
+		$currentAnswer->setMessage($message);
 		return $currentAnswer;
 	}
 	
@@ -111,7 +150,7 @@ class InstinctPositron extends Positron
 		return $currentAnswer;
 	}
 
-	public function findBestPriorityKeyword($userName, $message)
+	private function findBestPriorityKeyword($userName, $message)
 	{
 		$bestPriority = - 1;
 		$matchingKeywordItem = '';
@@ -130,7 +169,7 @@ class InstinctPositron extends Positron
 		return $matchingKeywordItem;
 	}
 
-	public function findBestVariance($userName, $message, $keyword)
+	private function findBestVariance($userName, $message, $keyword)
 	{
 		// Verify
 		if (empty($keyword)) {
@@ -162,7 +201,7 @@ class InstinctPositron extends Positron
 		return $matchingVarianceItem;
 	}
 
-	public function getResponse($userName, $userMessage, $varianceItem)
+	private function pickResponse($userName, $userMessage, $varianceItem)
 	{
 		// Verify
 		if (empty($varianceItem->responses)) {
@@ -172,33 +211,6 @@ class InstinctPositron extends Positron
 		// Select random response
 		$index = mt_rand(0, count($varianceItem->responses) - 1);
 		$response = $varianceItem->responses[$index];
-		
-		// Post traitment
-		if (strstr($response, '${time}')) {
-			$nowDate = new \DateTime(null, new \DateTimeZone('Europe/Paris'));
-			$response = preg_replace('!\$\{time\}!i', $nowDate->format('H\hi'), $response);
-		}
-		if (strstr($response, '${name}')) {
-			$response = preg_replace('!\$\{name\}!i', $this->knowledges->identity->name, $response);
-		}
-		if (strstr($response, '${conceptorName}')) {
-			$response = preg_replace('!\$\{conceptorName\}!i', $this->knowledges->identity->conceptorName, $response);
-		}
-		if (strstr($response, '${userName}')) {
-			$response = preg_replace('!\$\{userName\}!i', $userName, $response);
-		}
-		if (! empty($varianceItem->matchingData) && count($varianceItem->matchingData) > 0) {
-			foreach ($varianceItem->matchingData as $i => $data) {
-				$data = mb_strtolower($data[0]);
-				$response = preg_replace('!\$\{' . $i . '\}!i', $data, $response);
-				$response = preg_replace('!\$\{' . $i . '\|clean\}!i', parserUrl($data), $response);
-				$response = preg_replace('!\$\{' . $i . '\|ucfirst\}!i', ucfirst($data), $response);
-			}
-		}
-		if (! empty($varianceItem->matchingKeyword) && count($varianceItem->matchingKeyword) > 0) {
-			$data = mb_strtolower($varianceItem->matchingKeyword[0]);
-			$response = preg_replace('!\$\{keyword\}!i', $data, $response);
-		}
 		return $response;
 	}
 

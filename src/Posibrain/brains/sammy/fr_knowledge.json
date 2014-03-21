@@ -11,6 +11,14 @@
 		],
 		"variances": [
 			{
+				"variance": "${keyword} .*(?:${pseudo}|${name})",
+				"responses": [
+					"Salut ${userName} :-) Tu souhaites me parler ?",
+					"Que puis-je pour toi ${userName} ?",
+					"${keyword} ${userName} !"
+				]
+			},
+			{
 				"variance": "${keyword} .*@{ami}",
 				"responses": [
 					"Salut mon ${1} :-)",
@@ -117,6 +125,7 @@
 				"variance": "(?:Quelle ${keyword} est[ -]?il|A(?:aurai)s?[ -]?tu .*${keyword})",
 				"responses": [
 					"Il est ${time}",
+					"Chez moi, il est ${time}.",
 					"${time}, si je ne m'abuse.",
 					"Laisse-moi regarder... ${time} !"
 				]
@@ -144,6 +153,13 @@
 				]
 			},
 			{
+				"variance": "${keyword} ?fait?",
+				"responses": [
+					"Ce que je veux.",
+					"Je te parle.",
+				]
+			},
+			{
 				"variance": "(?:${keyword} ?as|As[ -]?${keyword})(.*)@{faim}",
 				"responses": [
 					"J'ai très ${3}",
@@ -155,14 +171,14 @@
 		]
 	},
 	{
-		"keyword": ["Nom", "Pseudo", "Prénom", "${name}"],
+		"keyword": ["Nom", "Pseudo", "Prénom", "${name}", "${pseudo}"],
 		"priority": 2,
 		"defaultResponses": [
 			"Je n'ai pas une bonne mémoire des noms.",
 		],
 		"variances": [
 			{
-				"variance": "${name}",
+				"variance": "(?:${name}|${pseudo})",
 				"responses": [
 					"Oui ?",
 				]
