@@ -38,12 +38,15 @@ class TchatBot implements ITchatBot
 	public function isTriggered($userMessage, $userName = '', $dateTime = 0)
 	{
 		$request = new TchatMessage($userMessage, $userName, $dateTime);
-		return $this->brain->isTriggered($request);
+		return $this->brain->isBotTriggered($request);
 	}
 
 	public function generateAnswer($userMessage, $userName = '', $dateTime = 0)
 	{
 		$request = new TchatMessage($userMessage, $userName, $dateTime);
+		if (!$this->brain->isBotTriggered($request)) {
+			return null;
+		}
 		$request = $this->brain->analyseRequest($request);
 		$memory = $this->brain->loadMemory($request);
 		$answer = $this->brain->generateSymbolicAnswer($request, $memory);

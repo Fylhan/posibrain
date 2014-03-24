@@ -17,8 +17,9 @@ class Positroner implements IPositroner
 	private static $logger = NULL;
 
 	public $positrons;
+	public $selectedPositrons;
 
-	public function __construct($config, $params=array())
+	public function __construct($config, $params = array())
 	{
 		// Logger
 		if (NULL == self::$logger) {
@@ -28,10 +29,12 @@ class Positroner implements IPositroner
 			}
 		}
 		
+		// Init seed for random values
+		mt_srand((double) microtime() * 1000000);
 		$this->loadPositrons($config, $params);
 	}
 
-	public function loadPositrons($config, $params=array())
+	public function loadPositrons($config, $params = array())
 	{
 		$files = glob(dirname(__FILE__) . '/Positron/*/*Positron.php');
 		if (empty($files))
@@ -44,6 +47,7 @@ class Positroner implements IPositroner
 			$positron = new $className($config, $params);
 			$this->positrons[] = $positron;
 		}
+		$this->selectedPositrons = array();
 		return $this->positrons;
 	}
 
@@ -65,23 +69,31 @@ class Positroner implements IPositroner
 	public function updatePositron($id, $state)
 	{}
 
-	public function isTriggered(TchatMessage $request, $currentValue = true)
+	public function isBotTriggered(TchatMessage $request, $currentValue = true)
 	{
 		if (empty($this->positrons)) {
 			return $currentValue;
 		}
+		// Positrons trigerred?
+		$this->selectedPositrons = array();
 		foreach ($this->positrons as $positron) {
-			$currentValue = $positron->isTriggered($request, $currentValue);
+			if ($positron->isPositronTriggered($request)) {
+				$this->selectedPositrons[] = $positron;
+			}
+		}
+		// Bot trigerred?
+		foreach ($this->selectedPositrons as $positron) {
+			$currentValue = $positron->isBotTriggered($request, $currentValue);
 		}
 		return $currentValue;
 	}
 
 	public function loadMemory(AnalysedRequest $request, $currentMemory = null)
 	{
-		if (empty($this->positrons)) {
+		if (empty($this->selectedPositrons)) {
 			return $currentMemory;
 		}
-		foreach ($this->positrons as $positron) {
+		foreach ($this->selectedPositrons as $positron) {
 			$currentMemory = $positron->loadMemory($request, $currentMemory);
 		}
 		return $currentMemory;
@@ -89,10 +101,10 @@ class Positroner implements IPositroner
 
 	public function analyseRequest(TchatMessage $request, AnalysedRequest $currentAnalysedRequest = null)
 	{
-		if (empty($this->positrons)) {
+		if (empty($this->selectedPositrons)) {
 			return $currentAnalysedRequest;
 		}
-		foreach ($this->positrons as $positron) {
+		foreach ($this->selectedPositrons as $positron) {
 			$currentAnalysedRequest = $positron->analyseRequest($request, $currentAnalysedRequest);
 		}
 		return $currentAnalysedRequest;
@@ -100,21 +112,21 @@ class Positroner implements IPositroner
 
 	public function generateSymbolicAnswer(AnalysedRequest $request, $memory = null, TchatMessage $currentAnswer = null)
 	{
-		if (empty($this->positrons)) {
+		if (empty($this->selectedPositrons)) {
 			return $currentAnswer;
 		}
-		foreach ($this->positrons as $positron) {
+		foreach ($this->selectedPositrons as $positron) {
 			$currentAnswser = $positron->generateSymbolicAnswer($request, $memory, $currentAnswer);
 		}
 		return $currentAnswser;
 	}
-	
+
 	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{
-		if (empty($this->positrons)) {
+		if (empty($this->selectedPositrons)) {
 			return $currentAnswer;
 		}
-		foreach ($this->positrons as $positron) {
+		foreach ($this->selectedPositrons as $positron) {
 			$currentAnswser = $positron->provideMeaning($request, $memory, $answer, $currentAnswer);
 		}
 		return $currentAnswser;
@@ -122,10 +134,10 @@ class Positroner implements IPositroner
 
 	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{
-		if (empty($this->positrons)) {
+		if (empty($this->selectedPositrons)) {
 			return $currentAnswer;
 		}
-		foreach ($this->positrons as $positron) {
+		foreach ($this->selectedPositrons as $positron) {
 			$currentAnswser = $positron->beautifyAnswer($request, $memory, $answer, $currentAnswer);
 		}
 		return $currentAnswser;

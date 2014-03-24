@@ -14,7 +14,7 @@ interface IPositroner
 	 * Return the Knowledge array
 	 * Or NULL if no brain is retrieved
 	 */
-	public function loadPositrons($config, $params=array());
+	public function loadPositrons($config, $params = array());
 
 	public function getPostitrons();
 
@@ -22,7 +22,7 @@ interface IPositroner
 
 	public function updatePositron($id, $state);
 
-	public function isTriggered(TchatMessage $request, $currentValue = true);
+	public function isBotTriggered(TchatMessage $request, $currentValue = true);
 
 	public function analyseRequest(TchatMessage $request, AnalysedRequest $currentAnalysedRequest = null);
 
@@ -31,6 +31,6 @@ interface IPositroner
 	public function generateSymbolicAnswer(AnalysedRequest $request, $memory, TchatMessage $currentAnswer = null);
 
 	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null);
-	
+
 	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null);
 }

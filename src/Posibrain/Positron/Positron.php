@@ -12,7 +12,12 @@ use Posibrain\AnalysedRequest;
 abstract class Positron
 {
 
-	public function isTriggered(TchatMessage $request, $currentValue = true)
+	public function isPositronTriggered(TchatMessage $request)
+	{
+		return true;
+	}
+
+	public function isBotTriggered(TchatMessage $request, $currentValue = true)
 	{
 		return $currentValue;
 	}
@@ -25,7 +30,12 @@ abstract class Positron
 		return $currentAnalysedRequest;
 	}
 
-	public function isStillTriggered(AnalysedRequest $request, $currentValue = true)
+	public function isPositronStillTriggered(AnalysedRequest $request)
+	{
+		return true;
+	}
+
+	public function isBotStillTriggered(AnalysedRequest $request, $currentValue = true)
 	{
 		return $currentValue;
 	}
@@ -42,13 +52,13 @@ abstract class Positron
 		}
 		return $currentMemory;
 	}
-	
+
 	public function generateSymbolicAnswer(AnalysedRequest $request, $memory, TchatMessage $currentAnswer = null)
 	{
 		return $currentAnswer;
 	}
 
-	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer=null)
+	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{
 		if (null == $currentAnswer) {
 			return $answer;
@@ -56,17 +66,16 @@ abstract class Positron
 		return $currentAnswer;
 	}
 
-	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer=null)
+	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{
 		if (null == $currentAnswer) {
 			return $answer;
 		}
 		return $currentAnswer;
 	}
-	
+
 	public function updateMemory(AnalysedRequest $request, $memory, TchatMessage $answer)
-	{
-	}
+	{}
 }
 
 

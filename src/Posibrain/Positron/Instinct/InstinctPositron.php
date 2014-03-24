@@ -22,7 +22,7 @@ class InstinctPositron extends Positron
 	private $brainManager;
 
 	private $knowledges;
-	
+
 	private $matching;
 
 	public function __construct($config, $params = array())
@@ -39,11 +39,11 @@ class InstinctPositron extends Positron
 		$this->config = $config;
 		$this->brainManager = new BrainManager($params);
 		
-		// Init seed for random values
-		mt_srand((double) microtime() * 1000000);
+		// -- Load knowledge file
+		$this->knowledges = $this->brainManager->loadBrain($this->config);
 	}
 
-	public function isTriggered(TchatMessage $request, $currentAnswer = true)
+	public function isBotTriggered(TchatMessage $request, $currentAnswer = true)
 	{
 		$content = $request->getMessage();
 		$triggered = (NULL != $content);
@@ -67,23 +67,14 @@ class InstinctPositron extends Positron
 		$userMessage = $request->getMessage();
 		$userName = $request->getName();
 		$dateTime = $request->getDate();
-
-		// -- Load knowledge file
-		if (empty($this->knowledges) && NULL == ($this->knowledges = $this->brainManager->loadBrain($this->config))) {
-			// Robustness, because an empty crazy knowledge should at least be available
-			return array(
-				'Qzhge',
-				'Rahh, someone ate my brain!'
-			);
+		
+		if (null == $this->knowledges) {
+			return null;
 		}
+		
 		$identity = $this->knowledges->identity;
 		$synonyms = $this->knowledges->synonyms;
 		$knowledge = $this->knowledges->keywords;
-		
-		// Don't trigger this bot
-		if (! $this->isTriggered($request)) {
-			return null;
-		}
 		
 		// -- Generate reply
 		// - Check User Message
@@ -99,12 +90,12 @@ class InstinctPositron extends Positron
 		$this->matching = $varianceItem;
 		$response = $this->pickResponse($userName, $userMessage, $varianceItem);
 		
-// 		if ('UTF-8' != $this->config->getCharset()) {}
+		// if ('UTF-8' != $this->config->getCharset()) {}
 		$currentAnswer = new TchatMessage($response, $identity->name);
 		return $currentAnswer;
 	}
-	
-	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer=null)
+
+	public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{
 		if (null == $currentAnswer) {
 			$currentAnswer = $answer;
@@ -112,7 +103,7 @@ class InstinctPositron extends Positron
 		$message = $currentAnswer->getMessage();
 		// Post traitment
 		if (strstr($message, '${time}')) {
-			$nowDate = new \DateTime(null, new \DateTimeZone(!isset($this->knowledges->identity->timezone) ? 'Europe/Paris' : $this->knowledges->identity->timezone));
+			$nowDate = new \DateTime(null, new \DateTimeZone(! isset($this->knowledges->identity->timezone) ? 'Europe/Paris' : $this->knowledges->identity->timezone));
 			$message = preg_replace('!\$\{time\}!i', $nowDate->format('H\hi'), $message);
 		}
 		if (strstr($message, '${name}')) {
@@ -140,8 +131,8 @@ class InstinctPositron extends Positron
 		$currentAnswer->setMessage($message);
 		return $currentAnswer;
 	}
-	
-	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer=null)
+
+	public function beautifyAnswer(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
 	{
 		if (null == $currentAnswer) {
 			$currentAnswer = $answer;
