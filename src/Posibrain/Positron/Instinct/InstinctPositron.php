@@ -62,7 +62,7 @@ class InstinctPositron extends Positron
 		return $triggered;
 	}
 
-	public function generateSymbolicAnswer(AnalysedRequest $request, TchatMessage $currentAnswer = null)
+	public function generateSymbolicAnswer(AnalysedRequest $request, $memory, TchatMessage $currentAnswer = null)
 	{
 		$userMessage = $request->getMessage();
 		$userName = $request->getName();
