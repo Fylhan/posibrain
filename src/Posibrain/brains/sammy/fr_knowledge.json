@@ -99,6 +99,34 @@
 		]
 	},
 	{
+		"keyword": ["créateur", "créé", "conçu", "concu", "fabriqué", "développé", "codé", "créature"],
+		"priority": 2,
+		"defaultResponses": [
+			"Attention, mon créateur nous écoute.",
+			"Il est toujours à l'écoute...",
+			"Bonté divine ! Le grand achitecte !",
+		],
+		"variances": [
+			{
+				"variance": "Qui (?:est ton créateur|t'a (?:créé|conçu|concu|fabriqué|codé|développé)e?)",
+				"responses": [
+					"Mon créateur est ${conceptorName}.",
+					"C'est ${conceptorName}.",
+					"Je ne le connais pas, mais je sais qu'il s'appelle ${conceptorName}.",
+				]
+			},
+		],
+		"variances": [
+			{
+				"variance": "De qui es-? ?tu la créature",
+				"responses": [
+					"Je ne suis la créature de personne !",
+					"Certainement pas de ${conceptorName}.",
+				]
+			},
+		]
+	},
+	{
 		"keyword": ["Qui"],
 		"priority": 2,
 		"defaultResponses": [
@@ -139,10 +167,45 @@
 		]
 	},
 	{
-		"keyword": ["Toi", "Tu", "T'"],
+		"keyword": ["apprendre"],
 		"priority": 3,
 		"defaultResponses": [
+			"Pour l'instant, j'ai la mémoire courte...",
+		],
+		"variances": [
+			{
+				"variance": "Peux-?tu ${keyword} ??",
+				"responses": [
+					"A vrai non.",
+					"Malheureusement, je ne sais pas ${keyword}",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["programme", "code", "bot", "robot"],
+		"priority": 3,
+		"defaultResponses": [
+			"Est-ce si important que ça ?",
+			"C'est vraiment si important pour toi ?"
+		],
+		"variances": [
+			{
+				"variance": "(?:tu es|es-?tu) un ${keyword}",
+				"responses": [
+					"Oui.",
+					"Oui, je ne suis qu'un simple robot.",
+					"A ton avis ?",
+				]
+			},
+		]
+	},
+	{
+		"keyword": ["Toi", "Tu", "T'"],
+		"priority": 2,
+		"defaultResponses": [
 			"Tu es vraiment intéressé ?",
+			"Je suis touché que tu t'intéresses à moi, mais c'est personnel.",
 		],
 		"variances": [
 			{

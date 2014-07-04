@@ -4,6 +4,8 @@ set_time_limit(0);
 
 require 'vendor/autoload.php';
 
+use Monolog\Logger;
+use Monolog\Handler\RotatingFileHandler;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,7 +14,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Posibrain\TchatBot;
-
 
 $console = new Application();
 
@@ -23,18 +24,27 @@ $console
 		new InputArgument('message', InputArgument::REQUIRED, 'Message of the requestor'),
 		new InputArgument('name', InputArgument::OPTIONAL, 'Name of the requestor'),
 	))
-	->setDescription('Submit a question to a tchatbot')
+	->setDescription('Discuss with a posibrained bot')
 	->setCode(function (InputInterface $input, OutputInterface $output) {
 		$userName = $input->getArgument('name');
 		if (empty($userName)) {
-			$userName = 'Anonymous';
+			$userName = 'You';
 		}
 		$userMessage = $input->getArgument('message');
 		
-		$bot = new TchatBot();
-		list($botName, $botMessage) = $bot->generateAnswer($userMessage, $userName, time());
+		$logger = new Logger('TchatBotConsole');
+		if (! is_dir(__DIR__ . '/../logs/')) {
+			mkdir(__DIR__ . '/../logs/');
+			chmod(__DIR__ . '/../logs/', '755');
+		}
+		$loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/console.log', 2, Logger::DEBUG);
+		$logger->pushHandler($loggerHandler);
+		$bot = new TchatBot('', '', array(
+		    'loggerHandler' => $loggerHandler
+		));
+		$answer = $bot->generateAnswer($userMessage, $userName, time());
 
-		$output->writeln(sprintf('%s: %s', utf8_decode($botName), utf8_decode($botMessage)));
+		$output->writeln(sprintf('%s: %s', @$answer[1], @$answer[0]));
 	})
 ;
 

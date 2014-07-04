@@ -49,7 +49,7 @@ class InstinctPositron extends Positron
 		$triggered = (NULL != $content);
 		$identity = $this->knowledges->identity;
 		// Triggered by specific rules
-		if (! empty($identity->trigger)) {
+		if (isset($identity->trigger) && ! empty($identity->trigger)) {
 			// Called by his name
 			if (! empty($identity->trigger->called)) {
 				$triggered &= preg_match('!(?:^|\s|[_-])(' . implode('|', $identity->trigger->called) . ')(?:$|\s|[\'_-])!i', $content);
@@ -186,7 +186,7 @@ class InstinctPositron extends Positron
 		}
 		// No variance found? Use default responses
 		if (empty($matchingVarianceItem->responses)) {
-			$matchingVarianceItem->responses = $keyword->defaultResponses;
+			@$matchingVarianceItem->responses = $keyword->defaultResponses;
 		}
 		$matchingVarianceItem->matchingKeyword = @$keyword->matchingKeyword;
 		return $matchingVarianceItem;

@@ -19,6 +19,14 @@
 	{
 		"key": "moche",
 		"synonyms": ["moche", "pas beau", "laid", "beurk", "caca", "burk"]
+	},
+	{
+		"key": "quoi",
+		"synonyms": ["quoi", "koi"]
+	},
+	{
+		"key": "pourquoi",
+		"synonyms": ["pourquoi", "pk"]
 	}
 ]
 }

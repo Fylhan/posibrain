@@ -6,8 +6,6 @@ Nothing very intelligent at the moment, a set of predefined sentences lead to an
 
 *Posibrain* name is inspired by Asimov's positronic robots. Yes, R. Sammy is currently stupid ;-)
 
-Based on this [Eliza PHP tchatbot implementation](http://www.perkiset.org/forum/all_things_general_tech/artificial_intelligence_as_we_know_it_today-t1177.5.html;wap2=), at least for the concept.
-
 Installation & Usage
 ------------
 Use Composer to download and install this library. To do so, create a folder and a file composer.json in it. Add this to this file:
@@ -31,8 +29,8 @@ You can easily use it in your code:
 
     header("Content-Type: text/html; charset=UTF-8");
     $bot = new TchatBot();
-    list($botName, $botMessage) = $bot->generateAnswer('Bnmaster', 'Bonjour mon ami', time());
-    echo $botName.' : '.$botMessage.'<br />';
+    $answer = $bot->generateAnswer('Bnmaster', 'Bonjour mon ami', time());
+    echo @$answer[1].' : '.$answer[0].'<br />';
     // May display for example: 'R. Sammy: Salutations noble ami.'
 
 
@@ -65,7 +63,7 @@ A lot of things are in progress! I have created a first version of the bot algor
 - [████ 98%] Manage several languages (only fr translation is done currently). [miss unit tests]
 - [██▒▒ 50%] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet. 
 - [███▒ 75%] Check and improve folder structure. Currently: src/Posibrain
-- [██▒▒  50%] Add command line support (add options in "submit question" command, add command to list available bots)
+- [██▒▒  50%] Add command line support (add options in "submit question" command, add command to start a discussion and list available bots)
 - [█▒▒▒ 25%] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin is called a "Positron" and must be a class extending Posibrain\Positron\Positron and with a class name finished by "Positron".
 - [▒▒▒▒ 0% ] Remove lib dependencies. The idea is to provide a basic implementation that can be used if dependencies are not downloaded. Dependencies will become optional (and nice to have), and TchatBot will be light weight(er).
 - [▒▒▒▒ 0% ] Create an interactive tchat example
