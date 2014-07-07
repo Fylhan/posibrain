@@ -93,7 +93,7 @@ class BrainManager implements IBrainManager
 		return true;
 	}
 
-	private function loadJsonFile($filepath, $charset = 'UTF-8')
+	public function loadJsonFile($filepath, $charset = 'UTF-8')
 	{
 		// Load JSON file
 		$data = @file_get_contents($filepath);

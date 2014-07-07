@@ -33,6 +33,7 @@ class TchatBot implements ITchatBot
 		
 		// Brain Manager
 		$this->brain = new Positroner($this->config, $params);
+		$this->brain->loadPositrons($this->config, $params);
 	}
 
 	public function isTriggered($userMessage, $userName = '', $dateTime = 0)
@@ -52,7 +53,7 @@ class TchatBot implements ITchatBot
 		$answer = $this->brain->generateSymbolicAnswer($request, $memory);
 		$answer = $this->brain->provideMeaning($request, $memory, $answer);
 		$answer = $this->brain->beautifyAnswer($request, $memory, $answer);
-		if (null == $answer) {
+		if (null == $answer || ('' == $answer->getMessage() && '' == $answer->getName())) {
 			$answer = new TchatMessage('Ssqdijoezf ? Jkfd.', 'QTzbn');
 		}
 		return $answer->toArray();

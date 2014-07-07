@@ -8,7 +8,10 @@ namespace Posibrain;
  */
 interface IPositroner
 {
-
+    /**
+     * List available Positrons
+     */
+	public function listPositrons();
 	/**
 	 * Load this bot's brain
 	 * Return the Knowledge array

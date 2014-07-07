@@ -12,9 +12,19 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\DialogHelper;
 
 use Posibrain\TchatBot;
+use Posibrain\Positroner;
 
+$logger = new Logger('TchatBotConsole');
+if (! is_dir(__DIR__ . '/../logs/')) {
+	mkdir(__DIR__ . '/../logs/');
+	chmod(__DIR__ . '/../logs/', '755');
+}
+$loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/console.log', 2, Logger::DEBUG);
+$logger->pushHandler($loggerHandler);
+		
 $console = new Application();
 
 // Add command
@@ -24,27 +34,114 @@ $console
 		new InputArgument('message', InputArgument::REQUIRED, 'Message of the requestor'),
 		new InputArgument('name', InputArgument::OPTIONAL, 'Name of the requestor'),
 	))
-	->setDescription('Discuss with a posibrained bot')
+	->setDescription('Submit a sentance to a posibrained bot')
 	->setCode(function (InputInterface $input, OutputInterface $output) {
+		global $loggerHandler;
+		
 		$userName = $input->getArgument('name');
 		if (empty($userName)) {
 			$userName = 'You';
 		}
 		$userMessage = $input->getArgument('message');
 		
-		$logger = new Logger('TchatBotConsole');
-		if (! is_dir(__DIR__ . '/../logs/')) {
-			mkdir(__DIR__ . '/../logs/');
-			chmod(__DIR__ . '/../logs/', '755');
-		}
-		$loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/console.log', 2, Logger::DEBUG);
-		$logger->pushHandler($loggerHandler);
 		$bot = new TchatBot('', '', array(
 		    'loggerHandler' => $loggerHandler
 		));
 		$answer = $bot->generateAnswer($userMessage, $userName, time());
 
-		$output->writeln(sprintf('%s: %s', @$answer[1], @$answer[0]));
+		$output->writeln(sprintf('%s: %s', @$answer[1], strip_tags(@$answer[0])));
+	})
+;
+
+$console
+	->register('discuss')
+	->setDefinition(array(
+		new InputArgument('name', InputArgument::OPTIONAL, 'Name of the requestor'),
+	))
+	->setDescription('Discuss with a posibrained bot')
+	->setCode(function (InputInterface $input, OutputInterface $output) {
+		global $loggerHandler;
+		
+		$dialog = new DialogHelper();
+		$userName = $input->getArgument('name');
+		if (empty($userName)) {
+			$userName = $dialog->ask(
+			    $output,
+			    'What is your name? (Anonymous) ',
+			    'Anonymous'
+			);
+		}
+		
+		$bot = new TchatBot('', '', array(
+		    'loggerHandler' => $loggerHandler
+		));
+		$output->writeln(sprintf('You can start to discuss with the bot... Have a good tchat!'));
+		$output->writeln(sprintf(''));
+		$userMessage = '';
+		$exitWords = array('quit', 'aurevoir', 'bye', 'tchao', 'adieu');
+		
+		while (!in_array(strtolower($userMessage), $exitWords)) {
+			$userMessage = $dialog->ask(
+			    $output,
+			    $userName.': ',
+			    ''
+			);
+			$answer = $bot->generateAnswer($userMessage, $userName, time());
+			$output->writeln(sprintf('%s: %s', @$answer[1], strip_tags(@$answer[0])));
+			$output->writeln(sprintf(''));
+		}
+		$output->writeln(sprintf('See you soon!'));
+	})
+;
+
+$console
+	->register('positrons')
+	->setDescription('List available positrons')
+	->setCode(function (InputInterface $input, OutputInterface $output) {
+		
+		$positroner = new Positroner();
+		$positrons = $positroner->listPositrons();
+		if (empty($positrons)) {
+			$output->writeln(sprintf('No positron available'));
+		}
+		foreach($positrons AS $i => $positron) {
+			$output->writeln(sprintf('[%d] %s', $i, $positron));
+		}
+	})
+;
+
+
+$console
+	->register('bots')
+	->setDescription('List available bots')
+	->setDefinition(array(
+		new InputArgument('brainPath', InputArgument::OPTIONAL, 'Path to brains'),
+	))
+	->setCode(function (InputInterface $input, OutputInterface $output) {
+		$brainPath = $input->getArgument('brainPath');
+		if (empty($brainPath)) {
+			$brainPath = __DIR__.'/brains/';
+		}
+		
+		$files = glob($brainPath.'*', GLOB_ONLYDIR);
+        if (empty($files)) {
+        	$output->writeln(sprintf('No bot available in %s', $brainPath));
+    	}
+        
+        $i = 0;
+        include_once(__DIR__ . '/../src/Posibrain/tools.php');
+        foreach ($files as $file) {
+        	$identityFile = $file.'/identity.json';
+        	if (is_file($identityFile) && (null != ($identity = loadJsonFile($identityFile, 'UTF-8')))) {
+        		$birth = new \DateTime($identity->birthday);
+        		$shortDesc = $identity->name.(!empty($identity->pseudo) ? ' alias '.$identity->pseudo : '').': made the '.$birth->format('jS \o\f F Y').' by '.$identity->conceptorName;
+            	$output->writeln(sprintf('[%d] %s', $i, $shortDesc));
+            }
+            else {
+            	$output->writeln(sprintf('[%d] No bot identity for %s', $i, $file));
+            }
+            ++$i;
+        }
 	})
 ;
 

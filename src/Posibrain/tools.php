@@ -1,4 +1,5 @@
 <?php
+use Seld\JsonLint\JsonParser;
 /**
  * @author Fylhan (http://fylhan.la-bnbox.fr)
  * @license LGPL-2.1+
@@ -464,6 +465,30 @@ function endsWith($needle, $haystack)
 function logger($str, $line = -1)
 {
 	echo '<span style="color: red;">' . dateToRFC822(time()) . ': "' . $str . '" on line ' . $line . '</span>';
+}
+
+function loadJsonFile($filepath, $charset = 'UTF-8')
+{
+    // Load JSON file
+    $data = @file_get_contents($filepath);
+    if (false === $data) {
+        return NULL;
+    }
+    // Encode to UTF-8
+    if ('UTF-8' != mb_detect_encoding($data, 'UTF-8', true)) {
+        $data = utf8_encode($data);
+    }
+    // Clean
+    $data = cleanJsonString($data);
+
+    // Parse JSON
+    try {
+        $parser = new JsonParser();
+        $knowledge = $parser->parse($data, JsonParser::ALLOW_DUPLICATE_KEYS);
+    } catch (ParsingException $e) {
+        return NULL;
+    }
+    return $knowledge;
 }
 
 ?>
