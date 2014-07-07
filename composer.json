@@ -3,6 +3,7 @@
 	"description" : "A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?",
 	"keywords" : [
 		"tchatbot",
+		"chatterbot",
 		"ia"
 	],
 	"authors" : [{

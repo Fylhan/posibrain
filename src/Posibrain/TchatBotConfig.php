@@ -36,7 +36,7 @@ class TchatBotConfig
 		$defaultConfig = array(
 			'id' => 'sammy',
 			'lang' => 'fr',
-			'brainsFolder' => __DIR__ . '/brains/',
+			'brainsFolder' => ((!empty($params) && isset($params['brainPath'])) ? $params['brainPath'] : __DIR__ . '/../../app/brains/'),
 			'charset' => 'UTF-8'
 		);
 		
