@@ -1,13 +1,14 @@
 Posibrain
 ========
 
-
-[![Latest Stable Version](https://poser.pugx.org/trialog/posibrain/v/stable.png)](https://packagist.org/packages/fylhan/posibrain)
-
 A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?
 Nothing very intelligent at the moment, a set of predefined sentences lead to an other set of predefined answers. But still, synonyms can be defined, data from the sentence can be used in the answer, and of course the same answer won't be use every time.
 
 *Posibrain*'s name is inspired by Asimov's positronic robots. Yes, as expected, R. Sammy is very silly ;-)
+
+[![Build Status](https://travis-ci.org/Fylhan/posibrain.svg)](https://travis-ci.org/Fylhan/posibrain)
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Fylhan/posibrain/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Fylhan/posibrain/?branch=master)
 
 Installation & Usage
 ------------
