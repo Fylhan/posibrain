@@ -1,6 +1,9 @@
 Posibrain
 ========
 
+
+[![Latest Stable Version](https://poser.pugx.org/trialog/posibrain/v/stable.png)](https://packagist.org/packages/fylhan/posibrain)
+
 A re-usable tchatbot PHP implementation to never be alone again. Hum, wait... What?
 Nothing very intelligent at the moment, a set of predefined sentences lead to an other set of predefined answers. But still, synonyms can be defined, data from the sentence can be used in the answer, and of course the same answer won't be use every time.
 
@@ -73,21 +76,7 @@ Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/examp
 
 ![Posibrain discussion example](https://raw.github.com/Fylhan/posibrain/master/doc/tchatbot-example.png)
 
-You can also run unit tests using PHPUnit by running the "phpunit" command:
-
-	> phpunit
-	PHPUnit 3.7.28 by Sebastian Bergmann.
-	
-	Configuration read from /var/www/posibrain/phpunit.xml
-	
-	..[2014-07-21 15:05:21] Posibrain\TchatBotConfig.WARNING: No such bot, load crazy stupid sammy (fr) instead. ["edouard","fr",[]] []
-	.[2014-07-21 15:05:21] Posibrain\TchatBotConfig.WARNING: No such bot, load crazy stupid sammy (fr) instead. ["edouard","pl",[]] []
-	.[2014-07-21 15:05:21] Posibrain\TchatBotConfig.WARNING: No such bot, load crazy stupid sammy (fr) instead. ["sammy","pl",[]] []
-	.
-	
-	Time: 37 ms, Memory: 3.50Mb
-	
-	OK (5 tests, 15 assertions)
+You can also run unit tests using PHPUnit by running the "phpunit" command.
 
 An interactive tchat implementation will come. At the moment, an old tchatbot version is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
 
