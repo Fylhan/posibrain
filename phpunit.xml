@@ -1,0 +1,7 @@
+<phpunit>
+    <testsuites>
+        <testsuite name="Posibrain">
+            <directory>test</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

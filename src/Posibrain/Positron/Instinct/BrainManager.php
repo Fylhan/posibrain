@@ -4,7 +4,7 @@ namespace Posibrain\Positron\Instinct;
 use Seld\JsonLint\JsonParser;
 use Seld\JsonLint\ParsingException;
 use Monolog\Logger;
-include_once (__DIR__ . '/../../tools.php');
+include_once (__DIR__ . '/../../../tools.php');
 
 /**
  *

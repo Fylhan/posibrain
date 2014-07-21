@@ -4,7 +4,8 @@
  * @license LGPL-2.1+
  */
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../src/Posibrain/tools.php';
+require __DIR__ . '/../src/checkSetup.php';
+require __DIR__ . '/../src/tools.php';
 
 use Monolog\Logger;
 use Monolog\Handler\RotatingFileHandler;

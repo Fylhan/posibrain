@@ -69,11 +69,27 @@ Or you can list available bots and positrons (i.e. plugins) :
 	
 How to test?
 -----------
-Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/test/test.php) in a browser. A list of sentences, and their bot answer, will be displayed.
+Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/example/static.php) in a browser. A list of sentences, and their bot answer, will be displayed.
 
 ![Posibrain discussion example](https://raw.github.com/Fylhan/posibrain/master/doc/tchatbot-example.png)
 
-An interactive tchat implementation will come. At the moment, this tchatbot is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
+You can also run unit tests using PHPUnit by running the "phpunit" command:
+
+	> phpunit
+	PHPUnit 3.7.28 by Sebastian Bergmann.
+	
+	Configuration read from /var/www/posibrain/phpunit.xml
+	
+	..[2014-07-21 15:05:21] Posibrain\TchatBotConfig.WARNING: No such bot, load crazy stupid sammy (fr) instead. ["edouard","fr",[]] []
+	.[2014-07-21 15:05:21] Posibrain\TchatBotConfig.WARNING: No such bot, load crazy stupid sammy (fr) instead. ["edouard","pl",[]] []
+	.[2014-07-21 15:05:21] Posibrain\TchatBotConfig.WARNING: No such bot, load crazy stupid sammy (fr) instead. ["sammy","pl",[]] []
+	.
+	
+	Time: 37 ms, Memory: 3.50Mb
+	
+	OK (5 tests, 15 assertions)
+
+An interactive tchat implementation will come. At the moment, an old tchatbot version is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
 
 
 How to use and modify?
@@ -113,12 +129,13 @@ A lot of things are in progress! I have created a first version of the bot algor
 - [███▒ 75%] Check and improve folder structure. Currently: src/Posibrain, app/brains
 - [███▒ 85%] Add command line support: discussion mode, submit one sentance, list bots and positrons. More to come! 
 - [█▒▒▒ 25%] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin is called a "Positron" and must be a class extending Posibrain\Positron\Positron and with a class name finished by "Positron".
+- [▒▒▒▒ 0% ] Add REST API
 - [▒▒▒▒ 0% ] Create an interactive tchat example
 - [▒▒▒▒ 0% ] Add proper documentation
-- [▒▒▒▒ 0% ] Add unit test engine
-- [▒▒▒▒ 0% ] Add unit tests
-- [█▒▒▒10% ] Update the first brain's knowledge
-- [█▒▒▒10% ] Increase knowledge syntax possibilities (use Twig syntax instead if possible, add support for ${name, conceptorName, lang, birthday, userName} everywhere in responses or questions).
+- [████100%] Add unit test engine: PHPUnit
+- [█▒▒▒ 10%] Add more unit tests
+- [█▒▒▒ 10%] Update the first brain's knowledge
+- [█▒▒▒ 10%] Increase knowledge syntax possibilities (use Twig syntax instead if possible, add support for ${name, conceptorName, lang, birthday, userName} everywhere in responses or questions).
 - [▒▒▒▒ 0% ] Add discussion log that will be used by the bot to learn and be a little bit more intelligent
 - [▒▒▒▒ 0% ] Add more and more intelligence!
 
