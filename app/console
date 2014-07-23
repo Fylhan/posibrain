@@ -18,12 +18,12 @@ use Symfony\Component\Console\Helper\DialogHelper;
 use Posibrain\TchatBot;
 use Posibrain\Positroner;
 
-$logger = new Logger('TchatBotConsole');
+$logger = new Logger('PosibrainCli');
 if (! is_dir(__DIR__ . '/../logs/')) {
 	mkdir(__DIR__ . '/../logs/');
 	chmod(__DIR__ . '/../logs/', '755');
 }
-$loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/console.log', 2, Logger::DEBUG);
+$loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/cli.log', 2, Logger::DEBUG);
 $logger->pushHandler($loggerHandler);
 		
 $console = new Application();

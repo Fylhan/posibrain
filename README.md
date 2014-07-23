@@ -7,7 +7,6 @@ Nothing very intelligent at the moment, a set of predefined sentences lead to an
 *Posibrain*'s name is inspired by Asimov's positronic robots. Yes, as expected, R. Sammy is very silly ;-)
 
 [![Build Status](https://travis-ci.org/Fylhan/posibrain.svg)](https://travis-ci.org/Fylhan/posibrain)
-
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Fylhan/posibrain/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Fylhan/posibrain/?branch=master)
 
 Installation & Usage
@@ -73,14 +72,13 @@ Or you can list available bots and positrons (i.e. plugins) :
 	
 How to test?
 -----------
-Launch the file [test.php](https://github.com/Fylhan/posibrain/blob/master/example/static.php) in a browser. A list of sentences, and their bot answer, will be displayed.
+Launch the file [static.php](https://github.com/Fylhan/posibrain/blob/master/example/static.php) in a browser. A list of sentences, and their bot answer, will be displayed. Check the "logs" folder if you encounter some issues.
 
 ![Posibrain discussion example](https://raw.github.com/Fylhan/posibrain/master/doc/tchatbot-example.png)
 
-You can also run unit tests using PHPUnit by running the "phpunit" command.
-
 An interactive tchat implementation will come. At the moment, an old tchatbot version is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
 
+You can also run unit tests using PHPUnit by running the "phpunit" command.
 
 How to use and modify?
 -----------
@@ -115,7 +113,7 @@ A lot of things are in progress! I have created a first version of the bot algor
 - [████100%] Find a proper name -> *Posibrain*. Inspired by the "Robots" books of Isaac Asimov and his positronic robots.
 - [████ 98%] Provide a way to select between several brains. [miss unit tests]
 - [████ 98%] Manage several languages: ok. Only one fr brain is available. [miss unit tests]
-- [██▒▒ 50%] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet. 
+- [██▒▒ 50%] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet.
 - [███▒ 75%] Check and improve folder structure. Currently: src/Posibrain, app/brains
 - [███▒ 85%] Add command line support: discussion mode, submit one sentance, list bots and positrons. More to come! 
 - [█▒▒▒ 25%] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin is called a "Positron" and must be a class extending Posibrain\Positron\Positron and with a class name finished by "Positron".
