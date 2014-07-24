@@ -5,6 +5,9 @@ use Posibrain\TchatBot;
 use Posibrain\Positroner;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Logger;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  *
@@ -13,40 +16,24 @@ use Monolog\Logger;
  */
 class RestApiController
 {
-
-    private $logger;
-
-    private $loggerHandler;
-
-    public function __construct()
-    {
-        $this->logger = new Logger('PosibrainRestApi');
-        if (! is_dir(__DIR__ . '/../../../logs/')) {
-            mkdir(__DIR__ . '/../../../logs/');
-            chmod(__DIR__ . '/../../../logs/', '755');
-        }
-        $this->loggerHandler = new RotatingFileHandler(__DIR__ . '/../../../logs/restapi.log', 2, Logger::DEBUG);
-        $this->logger->pushHandler($this->loggerHandler);
-    }
-
-    public function actionGetBots()
+    public function actionGetBots(Request $request)
     {
         $response = array(
-            'response' => false
+            'status' => false
         );
         try {
             $brainPath = __DIR__ . '/../../../app/brains/';
             $files = glob($brainPath . '*', GLOB_ONLYDIR);
             if (empty($files)) {
                 return $this->render(array(
-                    'response' => true,
+                    'status' => true,
                     'data' => '',
                     'message' => 'No bot avaible'
                 ));
             }
             
             $response = array(
-                'response' => true
+                'status' => true
             );
             $data = array();
             foreach ($files as $file) {
@@ -73,16 +60,16 @@ class RestApiController
         return $this->render($response);
     }
 
-    public function actionGetPositrons()
+    public function actionGetPositrons(Request $request)
     {
         $response = array(
-            'response' => false
+            'status' => false
         );
         try {
             $positroner = new Positroner();
             $positrons = $positroner->listPositrons();
             $response = array(
-                'response' => true,
+                'status' => true,
                 'data' => $positrons
             );
             if (empty($positrons)) {
@@ -94,22 +81,28 @@ class RestApiController
         return $this->render($response);
     }
 
-    public function actionSubmit($username, $message, $date)
+    public function actionSubmit(Request $request, $botId, $botLang)
     {
+        if (!$request->query->has('msg')) {
+            return $this->render(array('status' => false, 'message' => 'The field "msg" is required. You need to ask a question to the bot!'));
+        }
         $response = array(
-            'response' => false
+            'status' => false
         );
         try {
-            $bot = new TchatBot('', '', array(
-                'loggerHandler' => $this->loggerHandler
-            ));
-            $answer = $bot->generateAnswer($message, $username, $date);
+            $pseudo = $request->query->get('pseudo', 'Anonymous');
+            $message = $request->query->get('msg');
+            $logger = new Logger('PosibrainRestApi');
+            $loggerHandler = new RotatingFileHandler(__DIR__ . '/../../../logs/restapi.log', 2, Logger::DEBUG);
+            $logger->pushHandler($loggerHandler);
+            $bot = new TchatBot($botId, $botLang, array('loggerHandler' => $loggerHandler));
+            $answer = $bot->generateAnswer($message, $pseudo, time());
             $data = array(
                 'pseudo' => @$answer[1],
                 'message' => @$answer[0]
             );
             $response = array(
-                'response' => true,
+                'status' => true,
                 'data' => $data
             );
         } catch (\Exception $e) {
@@ -120,10 +113,11 @@ class RestApiController
 
     public function render($response)
     {
-        header('Cache-Control: no-cache, must-revalidate');
-        header('Expires: Sat, 29 Oct 2011 00:00:00 GMT');
-        header('Content-type: application/json');
-        echo json_encode($response);
-        return true;
+        $header = array(
+            'Cache-Control' => 'no-cache, must-revalidate',
+            'Expires' => 'Sat, 29 Oct 2011 00:00:00 GMT',
+            'Content-type' => 'application/json'
+        );
+        return new JsonResponse($response, 200, $header);
     }
 }
