@@ -70,6 +70,12 @@ Or you can list available bots and positrons (i.e. plugins) :
 	[0] Haddock/HaddockPositron
 	[1] Instinct/InstinctPositron
 	
+Or the REST API
+
+	GET /api/bots
+	GET /api/positrons
+	GET /api/submit/bot-id/bot-lang?pseudo=Fylhan&msg=Qui est le président des Etats-Unis ?
+	
 How to test?
 -----------
 Launch the file [static.php](https://github.com/Fylhan/posibrain/blob/master/example/static.php) in a browser. A list of sentences, and their bot answer, will be displayed. Check the "logs" folder if you encounter some issues.
