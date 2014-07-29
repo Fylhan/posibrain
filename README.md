@@ -78,11 +78,12 @@ Or the REST API
 	
 How to test?
 -----------
-Launch the file [static.php](https://github.com/Fylhan/posibrain/blob/master/example/static.php) in a browser. A list of sentences, and their bot answer, will be displayed. Check the "logs" folder if you encounter some issues.
+Open the file [dynamic.php](https://github.com/Fylhan/posibrain/blob/master/example/dynamic.php) in a browser to open an interactive tchat with R. Sammy, the crazy stupid bot.
+At the moment, an old tchatbot version is also installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
+
+For a static example, open the file [static.php](https://github.com/Fylhan/posibrain/blob/master/example/static.php) in a browser. A list of sentences, and their bot answer, will be displayed. Check the "logs" folder if you encounter some issues.
 
 ![Posibrain discussion example](https://raw.github.com/Fylhan/posibrain/master/doc/tchatbot-example.png)
-
-An interactive tchat implementation will come. At the moment, an old tchatbot version is installed on the [Bnbox minitchat](http://la-bnbox.fr) (fr), you can try to speak with him in French by beginning your sentences by "@Hari": "@Hary Salut !".
 
 You can also run unit tests using PHPUnit by running the "phpunit" command.
 
