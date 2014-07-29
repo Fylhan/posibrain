@@ -32,7 +32,8 @@ $logger->pushHandler($loggerHandler);
 $request = Request::createFromGlobals();
 
 $routes = new Routing\RouteCollection();
-$routes->add('bots', new Routing\Route('/bots', array(
+$routes->add('bots', new Routing\Route('/bots/{botId}', array(
+    'botId' => '',
     '_controller' => 'Posibrain\\RestApi\\RestApiController::actionGetBots'
 ), array(
     '_method' => 'GET'

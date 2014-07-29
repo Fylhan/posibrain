@@ -16,19 +16,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class RestApiController
 {
-    public function actionGetBots(Request $request)
+
+    public function actionGetBots(Request $request, $botId)
     {
         $response = array(
             'status' => false
         );
         try {
             $brainPath = __DIR__ . '/../../../app/brains/';
-            $files = glob($brainPath . '*', GLOB_ONLYDIR);
+            $files = glob($brainPath .(empty($botId) ? '*' : $botId), GLOB_ONLYDIR);
             if (empty($files)) {
                 return $this->render(array(
                     'status' => true,
                     'data' => '',
-                    'message' => 'No bot avaible'
+                    'message' => 'No bot available'
                 ));
             }
             
@@ -40,6 +41,7 @@ class RestApiController
                 $bot = array();
                 $identityFile = $file . '/identity.json';
                 if (is_file($identityFile) && (null != ($identity = loadJsonFile($identityFile, 'UTF-8')))) {
+                    $bot['id'] = $identity->id;
                     $bot['name'] = $identity->name;
                     $bot['pseudo'] = (! empty($identity->pseudo) ? $identity->pseudo : ucfirst($identity->name));
                     $bot['conceptorName'] = (! empty($identity->conceptorName) ? $identity->conceptorName : 'the Ancients');
@@ -83,8 +85,11 @@ class RestApiController
 
     public function actionSubmit(Request $request, $botId, $botLang)
     {
-        if (!$request->query->has('msg')) {
-            return $this->render(array('status' => false, 'message' => 'The field "msg" is required. You need to ask a question to the bot!'));
+        if (! $request->query->has('msg')) {
+            return $this->render(array(
+                'status' => false,
+                'message' => 'The field "msg" is required. You need to ask a question to the bot!'
+            ));
         }
         $response = array(
             'status' => false
@@ -95,11 +100,13 @@ class RestApiController
             $logger = new Logger('PosibrainRestApi');
             $loggerHandler = new RotatingFileHandler(__DIR__ . '/../../../logs/restapi.log', 2, Logger::DEBUG);
             $logger->pushHandler($loggerHandler);
-            $bot = new TchatBot($botId, $botLang, array('loggerHandler' => $loggerHandler));
+            $bot = new TchatBot($botId, $botLang, array(
+                'loggerHandler' => $loggerHandler
+            ));
             $answer = $bot->generateAnswer($message, $pseudo, time());
             $data = array(
                 'pseudo' => @$answer[1],
-                'message' => @$answer[0]
+                'msg' => @$answer[0]
             );
             $response = array(
                 'status' => true,
