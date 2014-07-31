@@ -40,7 +40,7 @@ class Positroner implements IPositroner
         $this->config = $config;
     }
 
-    public function listPositrons()
+    public function listPositrons($ids = null)
     {
         $files = glob(dirname(__FILE__) . '/Positron/*/*Positron.php');
         if (empty($files))
@@ -48,24 +48,24 @@ class Positroner implements IPositroner
         
         $positrons = array();
         foreach ($files as $file) {
-            $name = preg_replace('!^.*Posibrain/Positron/(.*/.*Positron).*$!ui', '$1', $file);
-            $positrons[] = $name;
+            $path = preg_replace('!^.*(Posibrain/Positron/.*/.*Positron).*$!ui', '$1', $file);
+            $name = preg_replace('!^.*Posibrain/Positron/(.*)/.*Positron.*$!ui', '$1', $file);
+            if (empty($ids) || $ids === $name  || (is_array($ids) && in_array($name, $ids)))  
+            {
+                $positrons[$name] = $path;
+            }
         }
         return $positrons;
     }
 
-    public function loadPositrons($config, $params = array())
+    public function loadPositrons($ids, $config, $params = array())
     {
-        $files = glob(dirname(__FILE__) . '/Positron/*/*Positron.php');
-        if (empty($files))
-            $files = array();
-        
-        foreach ($files as $file) {
-            require_once ($file);
-            $className = preg_replace('!^.*(Posibrain/Positron/.*/.*Positron).*$!ui', '$1', $file);
-            $className = '\\' . str_replace('/', '\\', $className);
+        $positrons = $this->listPositrons($ids);
+        foreach ($positrons as $positronName => $positronPath) {
+            require_once (dirname(__FILE__) . '/../' . $positronPath . '.php');
+            $className = '\\' . str_replace('/', '\\', $positronPath);
             $positron = new $className($config, $params);
-            $this->positrons[] = $positron;
+            $this->positrons[$positronName] = $positron;
         }
         $this->selectedPositrons = array();
         return $this->positrons;
@@ -108,6 +108,20 @@ class Positroner implements IPositroner
         return $currentValue;
     }
 
+    public function analyseRequest(TchatMessage $request, AnalysedRequest $currentAnalysedRequest = null)
+    {
+        if (empty($this->selectedPositrons)) {
+            return new AnalysedRequest($request->getMessage(), $request->getName(), $request->getDate(), $request);
+        }
+        foreach ($this->selectedPositrons as $positron) {
+            $currentAnalysedRequest = $positron->analyseRequest($request, $currentAnalysedRequest);
+        }
+        if (null == $currentAnalysedRequest) {
+            $currentAnalysedRequest = new AnalysedRequest($request->getMessage(), $request->getName(), $request->getDate(), $request);
+        }
+        return $currentAnalysedRequest;
+    }
+
     public function loadMemory(AnalysedRequest $request, $currentMemory = null)
     {
         if (empty($this->selectedPositrons)) {
@@ -119,24 +133,16 @@ class Positroner implements IPositroner
         return $currentMemory;
     }
 
-    public function analyseRequest(TchatMessage $request, AnalysedRequest $currentAnalysedRequest = null)
-    {
-        if (empty($this->selectedPositrons)) {
-            return $currentAnalysedRequest;
-        }
-        foreach ($this->selectedPositrons as $positron) {
-            $currentAnalysedRequest = $positron->analyseRequest($request, $currentAnalysedRequest);
-        }
-        return $currentAnalysedRequest;
-    }
-
     public function generateSymbolicAnswer(AnalysedRequest $request, $memory = null, TchatMessage $currentAnswer = null)
     {
         if (empty($this->selectedPositrons)) {
-            return $currentAnswer;
+            return new TchatMessage('Goxjjdp !?');
         }
         foreach ($this->selectedPositrons as $positron) {
             $currentAnswser = $positron->generateSymbolicAnswer($request, $memory, $currentAnswer);
+        }
+        if (null == $currentAnswser) {
+            $currentAnswser = new TchatMessage('HJJoc ?');
         }
         return $currentAnswser;
     }
@@ -144,10 +150,13 @@ class Positroner implements IPositroner
     public function provideMeaning(AnalysedRequest $request, $memory, TchatMessage $answer, TchatMessage $currentAnswer = null)
     {
         if (empty($this->selectedPositrons)) {
-            return $currentAnswer;
+            return new TchatMessage('Ndfdslp !?');
         }
         foreach ($this->selectedPositrons as $positron) {
             $currentAnswser = $positron->provideMeaning($request, $memory, $answer, $currentAnswer);
+        }
+        if (null == $currentAnswser) {
+            $currentAnswser = new TchatMessage('Ndfdslp ?');
         }
         return $currentAnswser;
     }

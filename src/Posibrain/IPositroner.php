@@ -10,14 +10,19 @@ interface IPositroner
 {
     /**
      * List available Positrons
+     * @param ids List of Positron ids to load
+     * @return List of 'positron name' => 'positron path'
      */
-	public function listPositrons();
+	public function listPositrons($ids = null);
 	/**
 	 * Load this bot's brain
 	 * Return the Knowledge array
 	 * Or NULL if no brain is retrieved
+	 * @param ids List of Positron ids to load
+	 * @param config Config values to pass to Positrons
+	 * @param params Other parameter values to pass to Positrons
 	 */
-	public function loadPositrons($config, $params = array());
+	public function loadPositrons($ids = null, $config, $params = array());
 
 	public function getPostitrons();
 

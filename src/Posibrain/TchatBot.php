@@ -33,7 +33,7 @@ class TchatBot implements ITchatBot
 		
 		// Brain Manager
 		$this->brain = new Positroner($this->config, $params);
-		$this->brain->loadPositrons($this->config, $params);
+		$this->brain->loadPositrons(@$params['positrons'], $this->config, $params);
 	}
 
 	public function isTriggered($userMessage, $userName = '', $dateTime = 0)
