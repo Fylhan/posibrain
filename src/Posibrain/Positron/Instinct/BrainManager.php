@@ -32,14 +32,14 @@ class BrainManager implements IBrainManager
 	 */
 	public function loadBrain($config)
 	{
-		if ('dev' == MODE || ! is_file($config->getComputedKnowledgeFile())) {
+		if ('dev' == MODE || ! is_file($config->getComputedKnowledgePath())) {
 			if (! $this->generateKnowledgeCache($config)) {
 				self::$logger->addWarning('Can\'t load knowledge', $config);
-				$knowledges = $this->loadJsonFile($config->getNoKnowledgeFile());
+				$knowledges = $this->loadJsonFile($config->getNoKnowledgePath());
 				return $knowledges;
 			}
 		}
-		$knowledges = $this->loadJsonFile($config->getComputedKnowledgeFile(), $config->getCharset());
+		$knowledges = $this->loadJsonFile($config->getComputedKnowledgePath(), $config->getCharset());
 		return $knowledges;
 	}
 
@@ -53,9 +53,9 @@ class BrainManager implements IBrainManager
 	public function generateKnowledgeCache($config)
 	{
 		// -- Load JSON knowledge
-		$identity = $this->loadJsonFile($config->getIdentityFile(), $config->getCharset());
-		$synonyms = $this->loadJsonFile($config->getSynonymsFile(), $config->getCharset());
-		$knowledge = $this->loadJsonFile($config->getKnowledgeFile(), $config->getCharset());
+		$identity = $this->loadJsonFile($config->getIdentityPath(), $config->getCharset());
+		$synonyms = $this->loadJsonFile($config->getSynonymsPath(), $config->getCharset());
+		$knowledge = $this->loadJsonFile($config->getKnowledgePath(), $config->getCharset());
 		
 		if (NULL == $identity || NULL == $synonyms || NULL == $knowledge) {
 			return false;
@@ -89,7 +89,7 @@ class BrainManager implements IBrainManager
 		$knowledges->identity = $identity;
 		$knowledges->synonyms = $synonyms;
 		// Store JSON cache
-		$this->storeJsonFile($config->getComputedKnowledgeFile(), $knowledges, $config->getCharset());
+		$this->storeJsonFile($config->getComputedKnowledgePath(), $knowledges, $config->getCharset());
 		return true;
 	}
 

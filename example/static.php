@@ -37,6 +37,11 @@ $loggerHandler = new RotatingFileHandler(__DIR__ . '/../logs/log.log', 2, Logger
 $logger->pushHandler($loggerHandler);
 $logger->addWarning("Launch test");
 
+
+$botSammy = new TchatBot('', '', array(
+    'positrons' => array('Instinct', 'Haddock'),
+    'loggerHandler' => $loggerHandler
+));
 ?>
 <!DOCTYPE html>
 <html lang="fr_FR">
@@ -49,14 +54,10 @@ $logger->addWarning("Launch test");
 </head>
 <body>
 	<h1>Posibrain example</h1>
-	<p>The bot is R. Sammy with Haddock Captain inside!</p>
+	<p>The bot is <?php echo $botSammy->getIdentity()->getName(); ?> with Haddock Captain inside!</p>
 	<hr />
 <?php
 // Launch Test
-$botSammy = new TchatBot('', '', array(
-    'positrons' => array('Instinct', 'Haddock'),
-    'loggerHandler' => $loggerHandler
-));
 // $botDaneel1 = new TchatBot('daneel', 'en', array(
 // 'loggerHandler' => $loggerHandler
 // ));

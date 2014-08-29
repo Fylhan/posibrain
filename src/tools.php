@@ -490,5 +490,3 @@ function loadJsonFile($filepath, $charset = 'UTF-8')
     }
     return $knowledge;
 }
-
-?>

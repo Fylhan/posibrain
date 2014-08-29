@@ -14,9 +14,9 @@ class TchatBot implements ITchatBot
 
 	private static $logger = NULL;
 
-	private $config;
+	private $identity;
 
-	private $brain;
+	private $positrons;
 
 	public function __construct($id = '', $lang = '', $params = array())
 	{
@@ -29,49 +29,49 @@ class TchatBot implements ITchatBot
 		}
 		
 		// Config
-		$this->config = new TchatBotConfig($id, $lang, $params);
+		$this->identity = new TchatBotIdentity($id, $lang, $params);
 		
 		// Brain Manager
-		$this->brain = new Positroner($this->config, $params);
-		$this->brain->loadPositrons(@$params['positrons'], $this->config, $params);
+		$this->positrons = new Positroner($this->identity, $params);
+		$this->positrons->loadPositrons(@$params['positrons'], $this->identity, $params);
 	}
 
 	public function isTriggered($userMessage, $userName = '', $dateTime = 0)
 	{
 		$request = new TchatMessage($userMessage, $userName, $dateTime);
-		return $this->brain->isBotTriggered($request);
+		return $this->positrons->isBotTriggered($request);
 	}
 
 	public function generateAnswer($userMessage, $userName = '', $dateTime = 0)
 	{
 		$request = new TchatMessage($userMessage, $userName, $dateTime);
-		if (!$this->brain->isBotTriggered($request)) {
+		if (!$this->positrons->isBotTriggered($request)) {
 			return null;
 		}
-		$request = $this->brain->analyseRequest($request);
-		$memory = $this->brain->loadMemory($request);
-		$answer = $this->brain->generateSymbolicAnswer($request, $memory);
-		$answer = $this->brain->provideMeaning($request, $memory, $answer);
-		$answer = $this->brain->beautifyAnswer($request, $memory, $answer);
+		$request = $this->positrons->analyseRequest($request);
+		$memory = $this->positrons->loadMemory($request);
+		$answer = $this->positrons->generateSymbolicAnswer($request, $memory);
+		$answer = $this->positrons->provideMeaning($request, $memory, $answer);
+		$answer = $this->positrons->beautifyAnswer($request, $memory, $answer);
 		if (null == $answer || ('' == $answer->getMessage() && '' == $answer->getName())) {
 			$answer = new TchatMessage('Ssqdijoezf ? Jkfd.', 'QTzbn');
 		}
 		return $answer->toArray();
 	}
 
-	public function getConfig()
+	public function getIdentity()
 	{
-		return $this->config;
+		return $this->identity;
 	}
 
 	public function setConfig($config)
 	{
-		$this->config = $config;
+		$this->identity = $config;
 	}
 
 	public function setBrain($brain)
 	{
-		$this->brain = $brain;
+		$this->positrons = $brain;
 	}
 }
 
