@@ -123,10 +123,10 @@ A lot of things are in progress! I have created a first version of the bot algor
 - [██▒▒ 50%] Manage several charsets, not only UTF-8. Knowledge loading/storing should be good (to be checked), but bot reply charset is not done yet.
 - [███▒ 75%] Check and improve folder structure. Currently: src/Posibrain, app/brains
 - [███▒ 85%] Add command line support: discussion mode, submit one sentance, list bots and positrons. More to come! 
-- [█▒▒▒ 25%] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin is called a "Positron" and must be a class extending Posibrain\Positron\Positron and with a class name finished by "Positron".
-- [▒▒▒▒ 0% ] Add REST API
-- [▒▒▒▒ 0% ] Create an interactive tchat example
-- [▒▒▒▒ 0% ] Add proper documentation
+- [███▒ 75%] Add REST API: submit one sentance, list bots and positrons. More to come! 
+- [██▒▒ 50%] Plugin management (to modify a bot behaviour. E.g. search a link in a Shaarli...). A plugin is called a "Positron" and must be a class extending Posibrain\Positron\Positron and with a class name finished by "Positron".
+- [████100%] Create an interactive tchat example
+- [█▒▒▒ 10%] Add proper documentation
 - [████100%] Add unit test engine: PHPUnit
 - [█▒▒▒ 10%] Add more unit tests
 - [█▒▒▒ 10%] Update the first brain's knowledge
@@ -137,7 +137,7 @@ A lot of things are in progress! I have created a first version of the bot algor
 
 Licensing
 --------
-This piece of code is a free software under [LGPL v2.1+](http://choosealicense.com/licenses/lgpl-v2.1/). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information. If this license is an issue for you, don't hesitate to contact me, I am very open on this :D
+This piece of code is a free software under [LGPL v3](http://choosealicense.com/licenses/lgpl-v./). See [LICENSE file](https://github.com/Fylhan/tchatbot/blob/master/LICENSE) for more information. If this license is an issue for you, don't hesitate to contact me, I am very open on this :D
 
 To summarize:
 
